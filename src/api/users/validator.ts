@@ -10,3 +10,13 @@ export const validateCreateUserAPI = Joi.object({
     .valid("Supervisor", "House-Keeper", "Receptionist", "Super-Admin")
     .required(),
 });
+
+// Validate login api
+export const validateLoginAPI = Joi.object({
+  email_or_phone: Joi.string().required().messages({
+    "any.required": "Email or phone number is required",
+  }),
+  password: Joi.string().required().messages({
+    "any.required": "Password is required",
+  }),
+});

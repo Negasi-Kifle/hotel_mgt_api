@@ -14,6 +14,7 @@ export default interface IUsersDoc extends Document {
   password_changed_at: Date;
   role: string;
   status: string;
+  checkPassword: (plainPassword: string, hashedPassword: string) => boolean;
 }
 
 declare global {
@@ -26,6 +27,10 @@ declare global {
       password: string;
       default_password: string;
       role: string;
+    }
+    interface ILoginInput {
+      email_or_phone: string;
+      password: string;
     }
   }
 }

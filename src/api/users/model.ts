@@ -81,6 +81,13 @@ usersSchema.pre("save", function (this: UsersDoc, next) {
   next();
 });
 
+usersSchema.methods.checkPassword = function (
+  plainPassword: string,
+  hashedPassword: string
+): boolean {
+  return bcrypt.compareSync(plainPassword, hashedPassword);
+};
+
 // Create users model
 const Users = mongoose.model<UsersDoc>("Users", usersSchema);
 

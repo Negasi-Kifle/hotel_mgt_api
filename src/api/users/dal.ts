@@ -16,4 +16,26 @@ export default class UsersDAL {
       throw error;
     }
   }
+
+  // Find user by email or phone number
+  static async getByEmailOrPhone(
+    emailOrPhone: string
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findOne({
+        $or: [
+          {
+            email: emailOrPhone,
+          },
+          {
+            phone_number: emailOrPhone,
+          },
+        ],
+      });
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
