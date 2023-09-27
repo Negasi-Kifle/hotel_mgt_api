@@ -37,6 +37,17 @@ export default (
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "ERROR";
 
+  // Handle different error scenarios
+  if (err.message.includes("E11000")) {
+    if (err.message.includes("phone_number")) {
+      err = new AppError("Phone number already used", 400);
+    } else if (err.message.includes("email")) {
+      err = new AppError("Email already used", 400);
+    } else {
+      err = new AppError("Duplicate data found", 400);
+    }
+  }
+
   // Send error for different environments
   if (configs.env === "DEVELOPMENT") {
     devError(err, res);
