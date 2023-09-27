@@ -2,10 +2,13 @@ import { Router } from "express";
 const router = Router();
 import validator from "../../utils/validator";
 import { validateCreateUserAPI, validateLoginAPI } from "./validator";
-import { createUser, login } from "./controller";
+import { createUser, getAllUsers, login } from "./controller";
 
 // Mount routes with their handler methods
-router.route("/").post(validator(validateCreateUserAPI), createUser);
+router
+  .route("/")
+  .post(validator(validateCreateUserAPI), createUser)
+  .get(getAllUsers);
 
 router.post("/login", validator(validateLoginAPI), login);
 

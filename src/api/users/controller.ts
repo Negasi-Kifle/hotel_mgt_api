@@ -57,3 +57,19 @@ export const login: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get all users
+export const getAllUsers: RequestHandler = async (req, res, next) => {
+  try {
+    const users = await Users.getAllUsers();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: users.length,
+      data: { users },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
