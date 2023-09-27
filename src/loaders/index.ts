@@ -6,10 +6,10 @@ import mongoDB from "./mongoDB";
  * Creates the http server
  */
 export default () => {
-  const httpServer = http.createServer();
-  const port = process.env.PORT || 300;
+  const httpServer = http.createServer(app);
+  const port = process.env.PORT || 3000;
   httpServer.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port} in ${process.env.NODE_ENV}`);
   });
 
   const mongo = mongoDB();

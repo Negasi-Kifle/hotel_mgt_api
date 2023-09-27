@@ -1,0 +1,46 @@
+import AppError from "./app_error";
+import configs from "../configs";
+import { Request, Response, NextFunction } from "express";
+
+// Custom error for "Development" environment
+const devError = (err: AppError, res: Response) => {
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+    error: err,
+    stack: err.stack,
+  });
+};
+
+// Custom error for "Production" environment
+const prodError = (err: AppError, res: Response) => {
+  if (err.isOperational) {
+    res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+    });
+  } else {
+    res.status(500).json({
+      status: "ERROR",
+      message: "Opps, somthing went wrong. Please try again",
+    });
+  }
+};
+
+// Error handler middleware
+export default (
+  err: AppError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  err.statusCode = err.statusCode || 500;
+  err.status = err.status || "ERROR";
+
+  // Send error for different environments
+  if (configs.env === "DEVELOPMENT") {
+    devError(err, res);
+  } else if (configs.env === "PRODUCTION" || configs.env === "QA") {
+    prodError(err, res);
+  }
+};
