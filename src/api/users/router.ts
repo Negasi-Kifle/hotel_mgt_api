@@ -1,5 +1,7 @@
 import { Router } from "express";
 const router = Router();
+import protect from "../../authorization/protect";
+import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import { validateCreateUserAPI, validateLoginAPI } from "./validator";
 import { createUser, getAllUsers, login } from "./controller";
@@ -8,7 +10,7 @@ import { createUser, getAllUsers, login } from "./controller";
 router
   .route("/")
   .post(validator(validateCreateUserAPI), createUser)
-  .get(getAllUsers);
+  .get(protect, roleAuth("Super-Admin"), getAllUsers);
 
 router.post("/login", validator(validateLoginAPI), login);
 

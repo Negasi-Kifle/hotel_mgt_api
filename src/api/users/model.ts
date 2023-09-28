@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import UsersDoc from "./dto";
 import validator from "validator";
 import bcrypt from "bcryptjs";
+import IUsersDoc from "./dto";
 
 // Users schema
 const usersSchema = new Schema(
@@ -31,12 +32,11 @@ const usersSchema = new Schema(
         message: "Invalid email address",
       },
     },
-    email_or_phone_changed_at: Date,
     password: {
       type: String,
       required: [true, "Password is required"],
     },
-    password_changed_at: Date,
+    credentials_changed_at: Date,
     default_password: String,
     is_default_password: {
       type: Boolean,
@@ -75,12 +75,38 @@ const usersSchema = new Schema(
 );
 
 // Hash password before saving user document
-usersSchema.pre("save", function (this: UsersDoc, next) {
+usersSchema.pre("save", function (this: IUsersDoc, next) {
   if (!this.isModified("password")) return next();
   this.password = bcrypt.hashSync(this.password, 12);
   next();
 });
 
+// Update credentials_changed_at if either of email, phone, password is changed
+usersSchema.pre("save", function (this: IUsersDoc, next) {
+  if (
+    (!this.isModified("password") &&
+      !this.isModified("email") &&
+      !this.isModified("phone_number")) ||
+    this.isNew
+  ) {
+    return next();
+  }
+  this.credentials_changed_at = new Date();
+  next();
+});
+
+// Check if credentials are updated after a given time
+usersSchema.methods.checkCredentialsChange = function (
+  this: IUsersDoc,
+  checkTime: number
+): boolean {
+  if (this.credentials_changed_at) {
+    return checkTime < Math.round(this.credentials_changed_at.getTime() / 100);
+  }
+  return false;
+};
+
+// Check password is correct when user tries to login
 usersSchema.methods.checkPassword = function (
   plainPassword: string,
   hashedPassword: string
@@ -88,8 +114,10 @@ usersSchema.methods.checkPassword = function (
   return bcrypt.compareSync(plainPassword, hashedPassword);
 };
 
+// usersSchema.methods.password
+
 // Create users model
-const Users = mongoose.model<UsersDoc>("Users", usersSchema);
+const Users = mongoose.model<IUsersDoc>("Users", usersSchema);
 
 // Export model
 export default Users;

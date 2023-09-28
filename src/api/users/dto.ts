@@ -11,10 +11,11 @@ export default interface IUsersDoc extends Document {
   password: string;
   default_password: string;
   is_default_password: string;
-  password_changed_at: Date;
+  credentials_changed_at: Date;
   role: string;
   status: string;
   checkPassword: (plainPassword: string, hashedPassword: string) => boolean;
+  checkCredentialsChange: (checkTime: number) => boolean;
 }
 
 declare global {
