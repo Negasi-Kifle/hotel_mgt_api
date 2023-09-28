@@ -3,6 +3,7 @@ import Users from "./dal";
 import { RequestHandler } from "express";
 import generatePassword from "../../utils/generate_password";
 import generate_jwt from "../../utils/generate_jwt";
+import IUsersDoc from "./dto";
 
 // Create user
 export const createUser: RequestHandler = async (req, res, next) => {
@@ -68,6 +69,29 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       results: users.length,
       data: { users },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Change default password
+export const changeDefaultPswd: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const newPswd = <UserRequest.IChangeDefaultPswdInput>req.value;
+    const loggedInUser = <IUsersDoc>req.user;
+
+    // Update default password
+    const user = await Users.changeDefaultPswd(loggedInUser.id, newPswd);
+    if (!user)
+      return next(new AppError("Account not found. Please login again", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Your default password changed",
+      data: { user },
     });
   } catch (error) {
     next(error);

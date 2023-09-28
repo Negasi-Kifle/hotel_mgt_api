@@ -58,4 +58,25 @@ export default class UsersDAL {
       throw error;
     }
   }
+
+  // Change default password
+  static async changeDefaultPswd(
+    id: string,
+    data: UserRequest.IChangeDefaultPswdInput
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(
+        id,
+        {
+          password: data.new_pswd,
+          is_default_password: false,
+          default_password: "",
+        },
+        { runValidators: true, new: true }
+      );
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

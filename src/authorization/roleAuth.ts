@@ -11,5 +11,6 @@ export default (...roles: string[]): RequestHandler => {
     if (!roles.includes(user.role)) {
       return next(new AppError("Access denied", 403));
     }
+    next();
   };
 };

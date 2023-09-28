@@ -29,7 +29,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return next(new AppError("Please login", 400));
 
       // Check if default password is changed
-      if (user.is_default_password)
+      if (req.url !== "/defaultpswd" && user.is_default_password)
         return next(new AppError("Please change your default password", 400));
 
       // Check if user credentials are updated after being logged in

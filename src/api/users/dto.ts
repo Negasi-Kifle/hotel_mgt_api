@@ -33,5 +33,8 @@ declare global {
       email_or_phone: string;
       password: string;
     }
+    interface IChangeDefaultPswdInput {
+      new_pswd: string;
+    }
   }
 }
