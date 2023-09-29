@@ -2,7 +2,8 @@ import AppError from "../../utils/app_error";
 import Users from "./dal";
 import { RequestHandler } from "express";
 import generatePassword from "../../utils/generate_password";
-import generate_token from "../../utils/generate_token";
+import generate_jwt from "../../utils/generate_jwt";
+import IUsersDoc from "./dto";
 
 // Create user
 export const createUser: RequestHandler = async (req, res, next) => {
@@ -43,8 +44,11 @@ export const login: RequestHandler = async (req, res, next) => {
       return next(new AppError("Invalid credntials", 400));
     }
 
+    user.is_credential_changed = false;
+    await user.save();
+
     // Generate token
-    const token = generate_token({ id: user.id, user: "admin" });
+    const token = generate_jwt({ id: user.id, user: "admin" });
 
     // Response
     res.status(200).json({
@@ -68,6 +72,47 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       results: users.length,
       data: { users },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Change default password
+export const changeDefaultPswd: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const data = <UserRequest.IChangeDefaultPswdInput>req.value;
+    const loggedInUser = <IUsersDoc>req.user;
+
+    // Check password matches
+    if (!loggedInUser.checkPassword(data.default_pswd, loggedInUser.password)) {
+      return next(new AppError("Incorrect default password", 400));
+    }
+
+    // Update default password
+    const user = await Users.changeDefaultPswd(loggedInUser, data);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Your default password is changed successfully. Login again",
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete all users in DB
+export const deleteAllUsers: RequestHandler = async (req, res, next) => {
+  try {
+    await Users.deleteAllusers();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Deleted all users in DB",
     });
   } catch (error) {
     next(error);

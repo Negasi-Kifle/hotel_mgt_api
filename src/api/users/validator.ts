@@ -1,14 +1,23 @@
-import Joi from "joi";
+import Joi, { string } from "joi";
 
 // Validate the createUser api
 export const validateCreateUserAPI = Joi.object({
-  first_name: Joi.string().required(),
-  last_name: Joi.string().required(),
+  first_name: Joi.string().required().messages({
+    "any.required": "User's first name is required",
+  }),
+  last_name: Joi.string().required().messages({
+    "any.required": "User's last name is required",
+  }),
   email: Joi.string().email(),
-  phone_number: Joi.string().required(),
+  phone_number: Joi.string().required().messages({
+    "any.required": "User's phone number is required",
+  }),
   role: Joi.string()
     .valid("Supervisor", "House-Keeper", "Receptionist", "Super-Admin")
-    .required(),
+    .required()
+    .messages({
+      "any.required": "User role is required",
+    }),
 });
 
 // Validate login api
@@ -18,5 +27,16 @@ export const validateLoginAPI = Joi.object({
   }),
   password: Joi.string().required().messages({
     "any.required": "Password is required",
+  }),
+});
+
+// Validate the "changeDefaultPswd" api
+export const validateChangeDefPswdAPI = Joi.object({
+  new_pswd: Joi.string().required().messages({
+    "any.required": "New password is required",
+  }),
+
+  default_pswd: Joi.string().required().messages({
+    "any.required": "Default password is required",
   }),
 });
