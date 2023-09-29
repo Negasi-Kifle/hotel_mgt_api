@@ -118,3 +118,30 @@ export const deleteAllUsers: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Change user status
+export const changeStatus: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const data = <UserRequest.IChangeStatusInput>req.value;
+
+    const loggedInUser = <IUsersDoc>req.user;
+    // Logged in admin can not deactivate their own acccount
+    if (data.user_id === loggedInUser.id) {
+      return next(new AppError("You can not change your own status", 400));
+    }
+
+    // Update status
+    const user = await Users.changeStatus(data);
+    if (!user) return next(new AppError("User does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `Status of ${user.first_name} ${user.last_name} changed successfully`,
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -36,5 +36,9 @@ declare global {
       default_pswd: string;
       new_pswd: string;
     }
+    interface IChangeStatusInput {
+      user_id: string;
+      status: string;
+    }
   }
 }

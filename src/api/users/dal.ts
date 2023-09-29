@@ -92,4 +92,20 @@ export default class UsersDAL {
       throw error;
     }
   }
+
+  // Change user status
+  static async changeStatus(
+    data: UserRequest.IChangeStatusInput
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(
+        data.user_id,
+        { status: data.status },
+        { runValidators: true, new: true }
+      );
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

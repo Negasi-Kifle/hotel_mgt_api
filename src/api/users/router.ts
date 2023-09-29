@@ -7,9 +7,11 @@ import {
   validateChangeDefPswdAPI,
   validateCreateUserAPI,
   validateLoginAPI,
+  validateStatusAPI,
 } from "./validator";
 import {
   changeDefaultPswd,
+  changeStatus,
   createUser,
   deleteAllUsers,
   getAllUsers,
@@ -30,6 +32,14 @@ router.patch(
   protect,
   validator(validateChangeDefPswdAPI),
   changeDefaultPswd
+);
+
+router.patch(
+  "/status",
+  protect,
+  roleAuth("Super-Admin"),
+  validator(validateStatusAPI),
+  changeStatus
 );
 
 // Export

@@ -1,4 +1,4 @@
-import Joi, { string } from "joi";
+import Joi from "joi";
 
 // Validate the createUser api
 export const validateCreateUserAPI = Joi.object({
@@ -39,4 +39,10 @@ export const validateChangeDefPswdAPI = Joi.object({
   default_pswd: Joi.string().required().messages({
     "any.required": "Default password is required",
   }),
+});
+
+// Validate user status api
+export const validateStatusAPI = Joi.object({
+  user_id: Joi.string().required(),
+  status: Joi.string().valid("Active", "Inactive").required(),
 });
