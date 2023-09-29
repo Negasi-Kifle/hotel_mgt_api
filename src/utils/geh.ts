@@ -48,8 +48,13 @@ export default (
     }
   }
 
-  // Send error for different environments
+  // Jwt related error
+  if (err.name === "JsonWebTokenError") {
+    err = new AppError("Please login", 401);
+  }
+
   if (configs.env === "DEVELOPMENT") {
+    // Send error for different environments
     devError(err, res);
   } else if (configs.env === "PRODUCTION" || configs.env === "QA") {
     prodError(err, res);

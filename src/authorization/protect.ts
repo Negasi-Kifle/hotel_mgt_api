@@ -24,7 +24,11 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     // Check many scenarios to handle before letting the user access a resource
     if (tokenDecoded.user === "admin") {
       const user = await UsersDAL.getById(tokenDecoded.id);
+
+      // Check user exists in DB
       if (!user) return next(new AppError("Please login", 401));
+
+      // Check account status
       if (user.status === "Inactive")
         return next(new AppError("Please login", 400));
 
@@ -33,7 +37,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
         return next(new AppError("Please change your default password", 400));
 
       // Check if user credentials are updated after being logged in
-      if (user.checkCredentialsChange(tokenDecoded.iat as number)) {
+      if (user.is_credential_changed) {
         return next(new AppError("Please login", 401));
       }
 

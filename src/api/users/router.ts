@@ -11,6 +11,7 @@ import {
 import {
   changeDefaultPswd,
   createUser,
+  deleteAllUsers,
   getAllUsers,
   login,
 } from "./controller";
@@ -19,7 +20,8 @@ import {
 router
   .route("/")
   .post(validator(validateCreateUserAPI), createUser)
-  .get(protect, roleAuth("Super-Admin", "Supervisor"), getAllUsers);
+  .get(protect, roleAuth("Super-Admin", "Supervisor"), getAllUsers)
+  .delete(deleteAllUsers);
 
 router.post("/login", validator(validateLoginAPI), login);
 

@@ -10,12 +10,11 @@ export default interface IUsersDoc extends Document {
   email: string;
   password: string;
   default_password: string;
-  is_default_password: string;
-  credentials_changed_at: Date;
+  is_default_password: boolean;
+  is_credential_changed: boolean;
   role: string;
   status: string;
   checkPassword: (plainPassword: string, hashedPassword: string) => boolean;
-  checkCredentialsChange: (checkTime: number) => boolean;
 }
 
 declare global {
@@ -34,6 +33,7 @@ declare global {
       password: string;
     }
     interface IChangeDefaultPswdInput {
+      default_pswd: string;
       new_pswd: string;
     }
   }

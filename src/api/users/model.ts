@@ -36,7 +36,7 @@ const usersSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    credentials_changed_at: Date,
+    is_credential_changed: { type: Boolean, default: false },
     default_password: String,
     is_default_password: {
       type: Boolean,
@@ -77,11 +77,12 @@ const usersSchema = new Schema(
 // Hash password before saving user document
 usersSchema.pre("save", function (this: IUsersDoc, next) {
   if (!this.isModified("password")) return next();
+
   this.password = bcrypt.hashSync(this.password, 12);
   next();
 });
 
-// Update credentials_changed_at if either of email, phone, password is changed
+// Update is_credential_changed if either of email, phone, password is changed
 usersSchema.pre("save", function (this: IUsersDoc, next) {
   if (
     (!this.isModified("password") &&
@@ -91,20 +92,9 @@ usersSchema.pre("save", function (this: IUsersDoc, next) {
   ) {
     return next();
   }
-  this.credentials_changed_at = new Date();
+  this.is_credential_changed = true;
   next();
 });
-
-// Check if credentials are updated after a given time
-usersSchema.methods.checkCredentialsChange = function (
-  this: IUsersDoc,
-  checkTime: number
-): boolean {
-  if (this.credentials_changed_at) {
-    return checkTime < Math.round(this.credentials_changed_at.getTime() / 100);
-  }
-  return false;
-};
 
 // Check password is correct when user tries to login
 usersSchema.methods.checkPassword = function (

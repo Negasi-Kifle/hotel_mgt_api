@@ -23,12 +23,19 @@ export default class UsersDAL {
   ): Promise<IUsersDoc | null> {
     try {
       const user = await UsersModel.findOne({
-        $or: [
+        $and: [
           {
-            email: emailOrPhone,
+            $or: [
+              {
+                email: emailOrPhone,
+              },
+              {
+                phone_number: emailOrPhone,
+              },
+            ],
           },
           {
-            phone_number: emailOrPhone,
+            status: "Active",
           },
         ],
       });
@@ -61,20 +68,26 @@ export default class UsersDAL {
 
   // Change default password
   static async changeDefaultPswd(
-    id: string,
+    user: IUsersDoc,
     data: UserRequest.IChangeDefaultPswdInput
-  ): Promise<IUsersDoc | null> {
+  ): Promise<IUsersDoc> {
     try {
-      const user = await UsersModel.findByIdAndUpdate(
-        id,
-        {
-          password: data.new_pswd,
-          is_default_password: false,
-          default_password: "",
-        },
-        { runValidators: true, new: true }
-      );
+      user.password = data.new_pswd;
+      user.is_default_password = false;
+      user.default_password = "";
+      user.is_credential_changed = true;
+      await user.save();
+
       return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete all users in DB
+  static async deleteAllusers() {
+    try {
+      await UsersModel.deleteMany();
     } catch (error) {
       throw error;
     }
