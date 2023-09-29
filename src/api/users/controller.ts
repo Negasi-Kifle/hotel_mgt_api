@@ -220,3 +220,27 @@ export const showPersonalInfo: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Change password
+export const changePswd: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <UserRequest.IChangePswdInput>req.value;
+    const loggedInUser = <IUsersDoc>req.user;
+
+    // Check current password is correct
+    if (!loggedInUser.checkPassword(data.current_pswd, loggedInUser.password)) {
+      return next(new AppError("Incorrect current password", 400));
+    }
+
+    const user = await Users.changePswd(loggedInUser, data.new_pswd);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Password changed successfully. Please login again",
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

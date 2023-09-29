@@ -77,7 +77,6 @@ const usersSchema = new Schema(
 // Hash password before saving user document
 usersSchema.pre("save", function (this: IUsersDoc, next) {
   if (!this.isModified("password")) return next();
-
   this.password = bcrypt.hashSync(this.password, 12);
   next();
 });

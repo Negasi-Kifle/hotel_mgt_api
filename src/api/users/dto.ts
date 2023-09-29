@@ -46,5 +46,9 @@ declare global {
       phone_number: string;
       email: string;
     }
+    interface IChangePswdInput {
+      current_pswd: string;
+      new_pswd: string;
+    }
   }
 }

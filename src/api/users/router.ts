@@ -5,6 +5,7 @@ import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import {
   validateChangeDefPswdAPI,
+  validateChangePswdAPI,
   validateCreateUserAPI,
   validateLoginAPI,
   validatePersonalInfoAPI,
@@ -12,6 +13,7 @@ import {
 } from "./validator";
 import {
   changeDefaultPswd,
+  changePswd,
   changeStatus,
   createUser,
   deleteAllUsers,
@@ -51,6 +53,13 @@ router
   .route("/personalinfo")
   .patch(protect, validator(validatePersonalInfoAPI), updatePersonalInfo)
   .get(protect, showPersonalInfo);
+
+router.patch(
+  "/password",
+  protect,
+  validator(validateChangePswdAPI),
+  changePswd
+);
 
 router
   .route("/:userId")
