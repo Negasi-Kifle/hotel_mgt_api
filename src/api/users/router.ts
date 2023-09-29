@@ -15,6 +15,7 @@ import {
   createUser,
   deleteAllUsers,
   getAllUsers,
+  getUserById,
   login,
 } from "./controller";
 
@@ -41,6 +42,8 @@ router.patch(
   validator(validateStatusAPI),
   changeStatus
 );
+
+router.route("/:userId").get(protect, roleAuth("Super-Admin"), getUserById);
 
 // Export
 export default router;

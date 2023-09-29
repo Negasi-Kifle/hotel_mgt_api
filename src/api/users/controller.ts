@@ -78,6 +78,22 @@ export const getAllUsers: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Get user by id
+export const getUserById: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await Users.getById(req.params.userId);
+    if (!user) return next(new AppError("User not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Change default password
 export const changeDefaultPswd: RequestHandler = async (req, res, next) => {
   try {
