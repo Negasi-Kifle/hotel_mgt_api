@@ -40,5 +40,11 @@ declare global {
       user_id: string;
       status: string;
     }
+    interface IUpdatePersonalInfo {
+      first_name: string;
+      last_name: string;
+      phone_number: string;
+      email: string;
+    }
   }
 }

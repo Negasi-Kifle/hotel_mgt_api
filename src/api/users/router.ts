@@ -7,6 +7,7 @@ import {
   validateChangeDefPswdAPI,
   validateCreateUserAPI,
   validateLoginAPI,
+  validatePersonalInfoAPI,
   validateStatusAPI,
 } from "./validator";
 import {
@@ -18,6 +19,8 @@ import {
   getAllUsers,
   getUserById,
   login,
+  showPersonalInfo,
+  updatePersonalInfo,
 } from "./controller";
 
 // Mount routes with their handler methods
@@ -43,6 +46,11 @@ router.patch(
   validator(validateStatusAPI),
   changeStatus
 );
+
+router
+  .route("/personalinfo")
+  .patch(protect, validator(validatePersonalInfoAPI), updatePersonalInfo)
+  .get(protect, showPersonalInfo);
 
 router
   .route("/:userId")

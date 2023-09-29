@@ -46,3 +46,11 @@ export const validateStatusAPI = Joi.object({
   user_id: Joi.string().required(),
   status: Joi.string().valid("Active", "Inactive").required(),
 });
+
+// Update personal info
+export const validatePersonalInfoAPI = Joi.object({
+  first_name: Joi.string(),
+  last_name: Joi.string(),
+  phone_number: Joi.string(),
+  email: Joi.string(),
+});

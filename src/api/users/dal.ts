@@ -128,4 +128,20 @@ export default class UsersDAL {
       throw error;
     }
   }
+
+  // Update personal info
+  static async updateUserInfo(
+    id: string,
+    data: UserRequest.IUpdatePersonalInfo
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -183,3 +183,40 @@ export const changeStatus: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update personal detail
+export const updatePersonalInfo: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const incomingData = <UserRequest.IUpdatePersonalInfo>req.value;
+    const loggedInUser = <IUsersDoc>req.user;
+
+    // Update personal info
+    const user = await Users.updateUserInfo(loggedInUser.id, incomingData);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "You have updated your personal info successfully",
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get personla info
+export const showPersonalInfo: RequestHandler = async (req, res, next) => {
+  try {
+    const loggedInUser = <IUsersDoc>req.user;
+    const user = await Users.getById(loggedInUser.id);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
