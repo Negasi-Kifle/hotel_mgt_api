@@ -36,5 +36,19 @@ declare global {
       default_pswd: string;
       new_pswd: string;
     }
+    interface IChangeStatusInput {
+      user_id: string;
+      status: string;
+    }
+    interface IUpdatePersonalInfo {
+      first_name: string;
+      last_name: string;
+      phone_number: string;
+      email: string;
+    }
+    interface IChangePswdInput {
+      current_pswd: string;
+      new_pswd: string;
+    }
   }
 }

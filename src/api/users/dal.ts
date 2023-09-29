@@ -56,6 +56,16 @@ export default class UsersDAL {
     }
   }
 
+  // Get user by id
+  static async getUserById(id: string): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findById(id);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Find user by id
   static async getById(id: string): Promise<IUsersDoc | null> {
     try {
@@ -88,6 +98,77 @@ export default class UsersDAL {
   static async deleteAllusers() {
     try {
       await UsersModel.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete user by id
+  static async deleteById(id: string): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndDelete(id);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Change user status
+  static async changeStatus(
+    data: UserRequest.IChangeStatusInput
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(
+        data.user_id,
+        { status: data.status },
+        { runValidators: true, new: true }
+      );
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update personal info
+  static async updateUserInfo(
+    id: string,
+    data: UserRequest.IUpdatePersonalInfo
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Change password
+  static async changePswd(
+    user: IUsersDoc,
+    new_pswd: string
+  ): Promise<IUsersDoc> {
+    try {
+      user.password = new_pswd; //
+      await user.save();
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Reset password
+  static async resetPswd(
+    user: IUsersDoc,
+    new_pswd: string
+  ): Promise<IUsersDoc> {
+    try {
+      user.password = new_pswd;
+      user.default_password = new_pswd;
+      await user.save();
+      return user;
     } catch (error) {
       throw error;
     }
