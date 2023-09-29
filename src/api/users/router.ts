@@ -21,6 +21,7 @@ import {
   getAllUsers,
   getUserById,
   login,
+  resetPswd,
   showPersonalInfo,
   updatePersonalInfo,
 } from "./controller";
@@ -60,6 +61,8 @@ router.patch(
   validator(validateChangePswdAPI),
   changePswd
 );
+
+router.patch("/:userId/reset", protect, roleAuth("Super-Admin"), resetPswd);
 
 router
   .route("/:userId")

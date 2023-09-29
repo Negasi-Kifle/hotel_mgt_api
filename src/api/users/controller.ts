@@ -244,3 +244,32 @@ export const changePswd: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Reset password
+export const resetPswd: RequestHandler = async (req, res, next) => {
+  try {
+    const loggedInUser = <IUsersDoc>req.user;
+    if (loggedInUser.id === req.params.userId) {
+      return next(new AppError("You cannot reset your own password", 400));
+    }
+
+    // Find user
+    const userData = await Users.getById(req.params.userId);
+    if (!userData) return next(new AppError("User not found", 404));
+
+    // Generate random password
+    const new_pswd = generatePassword();
+
+    // Reset password
+    const user = await Users.resetPswd(userData, new_pswd);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `${user.first_name} ${user.last_name}'s password has been reset successfully`,
+      data: { user, new_pswd },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
