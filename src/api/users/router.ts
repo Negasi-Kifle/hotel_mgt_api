@@ -14,6 +14,7 @@ import {
   changeStatus,
   createUser,
   deleteAllUsers,
+  deleteById,
   getAllUsers,
   getUserById,
   login,
@@ -43,7 +44,10 @@ router.patch(
   changeStatus
 );
 
-router.route("/:userId").get(protect, roleAuth("Super-Admin"), getUserById);
+router
+  .route("/:userId")
+  .get(protect, roleAuth("Super-Admin"), getUserById)
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 // Export
 export default router;

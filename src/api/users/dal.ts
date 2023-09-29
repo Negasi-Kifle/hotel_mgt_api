@@ -103,6 +103,16 @@ export default class UsersDAL {
     }
   }
 
+  // Delete user by id
+  static async deleteById(id: string): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndDelete(id);
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Change user status
   static async changeStatus(
     data: UserRequest.IChangeStatusInput

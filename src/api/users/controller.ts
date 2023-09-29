@@ -135,6 +135,28 @@ export const deleteAllUsers: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Delete user by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const loggedInUser = <IUsersDoc>req.user;
+    if (loggedInUser.id === req.params.userId) {
+      return next(new AppError("You cannot delete your self", 400));
+    }
+
+    // Delete user
+    const user = await Users.deleteById(req.params.userId);
+    if (!user) return next(new AppError("User not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `Data of ${user.first_name} ${user.last_name} has been deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Change user status
 export const changeStatus: RequestHandler = async (req, res, next) => {
   try {
