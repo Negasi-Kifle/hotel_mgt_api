@@ -37,3 +37,58 @@ export const getAllRooms: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get room by id
+export const getById: RequestHandler = async (req, res, next) => {
+  try {
+    const room = await RoomsDAL.getById(req.params.roomId);
+    if (!room) return next(new AppError("Room not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      data: { room },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update room info
+export const updateRoomInfo: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const data = <RoomRequest.IUpdateInfoInput>req.value;
+    const room = await RoomsDAL.updateRoomInfo(req.params.roomId, data);
+    if (!room) return next(new AppError("Room does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `${room.room_id} has been updated successfully`,
+      data: { room },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update room status
+export const updateStatus: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const data = <RoomRequest.IUpdateStatusInput>req.value;
+
+    // Update room status
+    const room = await RoomsDAL.updateRoomStatus(req.params.roomId, data);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `Status of ${room?.room_id} is changed to ${data.room_status}`,
+      data: { room },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

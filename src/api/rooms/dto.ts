@@ -19,5 +19,14 @@ declare global {
       room_floor: string;
       room_status: string;
     }
+    interface IUpdateInfoInput {
+      room_id: string;
+      room_size: string;
+      room_price: number;
+      room_floor: string;
+    }
+    interface IUpdateStatusInput {
+      room_status: string;
+    }
   }
 }
