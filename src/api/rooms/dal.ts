@@ -12,4 +12,14 @@ export default class RoomsDAL {
       throw error;
     }
   }
+
+  // Get all rooms
+  static async getAllRooms(): Promise<IRoomsDoc[]> {
+    try {
+      const rooms = await Rooms.find();
+      return rooms;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -21,3 +21,19 @@ export const createRoom: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get all rooms
+export const getAllRooms: RequestHandler = async (req, res, next) => {
+  try {
+    const rooms = await RoomsDAL.getAllRooms();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: rooms.length,
+      data: { rooms },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
