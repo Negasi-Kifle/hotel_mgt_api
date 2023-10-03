@@ -52,12 +52,12 @@ export default class RoomsDAL {
   // Update room status
   static async updateRoomStatus(
     id: string,
-    room_status: RoomRequest.IUpdateStatusInput
+    data: RoomRequest.IUpdateStatusInput
   ): Promise<IRoomsDoc | null> {
     try {
       const room = await Rooms.findByIdAndUpdate(
         id,
-        { room_status },
+        { room_status: data.room_status },
         { runValidators: true, new: true }
       );
       return room;

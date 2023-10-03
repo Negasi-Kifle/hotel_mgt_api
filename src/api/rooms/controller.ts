@@ -81,6 +81,7 @@ export const updateStatus: RequestHandler = async (req, res, next) => {
 
     // Update room status
     const room = await RoomsDAL.updateRoomStatus(req.params.roomId, data);
+    if (!room) return next(new AppError("Room does not exist", 404));
 
     // Response
     res.status(200).json({

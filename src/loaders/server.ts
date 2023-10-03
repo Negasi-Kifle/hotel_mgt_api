@@ -4,6 +4,7 @@ import geh from "../utils/geh";
 import AppError from "../utils/app_error";
 import userRouter from "../api/users/router";
 import roomsRouter from "../api/rooms/router";
+import bookingRouter from "../api/booking/router";
 
 // Third party and custom middlewares
 app.use(express.json());
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/rooms", roomsRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 // Unknown URL
 app.use("*", (req: Request, res: Response, next: NextFunction) => {
