@@ -92,3 +92,34 @@ export const updateStatus: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete all rooms
+export const deleteAll: RequestHandler = async (req, res, next) => {
+  try {
+    await RoomsDAL.deleteAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "All rooms are deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete room by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const room = await RoomsDAL.deleteById(req.params.roomId);
+    if (!room) return next(new AppError("Room does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      meesage: `${room.room_id} is deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

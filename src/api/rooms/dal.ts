@@ -65,4 +65,23 @@ export default class RoomsDAL {
       throw error;
     }
   }
+
+  // Delete all rooms
+  static async deleteAll() {
+    try {
+      await Rooms.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete room by id
+  static async deleteById(id: string): Promise<IRoomsDoc | null> {
+    try {
+      const room = await Rooms.findByIdAndDelete(id);
+      return room;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

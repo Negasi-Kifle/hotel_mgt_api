@@ -10,6 +10,8 @@ import {
 } from "./validator";
 import {
   createRoom,
+  deleteAll,
+  deleteById,
   getAllRooms,
   getById,
   updateRoomInfo,
@@ -25,7 +27,8 @@ router
     validator(validateCreateAPI),
     createRoom
   )
-  .get(protect, roleAuth("Super-Admin", "Receptionist"), getAllRooms);
+  .get(protect, roleAuth("Super-Admin", "Receptionist"), getAllRooms)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router
   .route("/:roomId")
@@ -35,7 +38,8 @@ router
     roleAuth("Super-Admin"),
     validator(validateUpdateAPI),
     updateRoomInfo
-  );
+  )
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 router.patch(
   "/status/:roomId",
