@@ -5,7 +5,7 @@ export const validateCreateAPI = Joi.object({
   room_id: Joi.string().required().messages({
     "any.required": "Please provide room name or number.",
   }),
-  room_size: Joi.string(),
+  room_type: Joi.string(),
   room_price: Joi.number(),
   room_floor: Joi.string(),
   room_status: Joi.string().valid("OCC", "VD", "VR", "OOO", "VC").messages({
@@ -18,7 +18,7 @@ export const validateUpdateAPI = Joi.object({
   room_id: Joi.string().messages({
     "any.required": "Please provide room name or number.",
   }),
-  room_size: Joi.string(),
+  room_type: Joi.string(),
   room_price: Joi.number(),
   room_floor: Joi.string(),
 });

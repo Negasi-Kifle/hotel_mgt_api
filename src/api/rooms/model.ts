@@ -8,7 +8,7 @@ const roomsSchema = new Schema(
       type: String,
       required: [true, "Room id is required"],
     },
-    room_size: String,
+    room_type: String,
     room_price: {
       type: Number,
       required: [true, "Room price is required"],
