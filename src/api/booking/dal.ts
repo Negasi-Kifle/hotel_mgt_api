@@ -34,4 +34,20 @@ export default class BookingDAL {
       throw error;
     }
   }
+
+  // Update booking info
+  static async updateInfo(
+    id: string,
+    data: BookingRequest.IUpdateInfoInput
+  ): Promise<IBookingDoc | null> {
+    try {
+      const booking = await Booking.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

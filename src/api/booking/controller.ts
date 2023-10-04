@@ -57,3 +57,23 @@ export const getById: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update booking info
+export const updateInfo: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <BookingRequest.IUpdateInfoInput>req.value;
+
+    // Update booking
+    const booking = await Booking.updateInfo(req.params.bookingId, data);
+    if (!booking) return next(new AppError("Booking does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Booking info updated successfully",
+      data: { booking },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
