@@ -26,5 +26,11 @@ declare global {
       arr_date: Date;
       dep_date: Date;
     }
+    interface IUpdateInfoInput {
+      first_name: string;
+      last_name: string;
+      id_num: string;
+      phone_num: string;
+    }
   }
 }

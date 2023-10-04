@@ -27,3 +27,11 @@ export const validateCreateAPI = Joi.object({
       "Status must be one of the following: Pending, Checked-In, Checked-Out",
   }),
 });
+
+// Validate update-api
+export const validateUpdateAPI = Joi.object({
+  first_name: Joi.string(),
+  last_name: Joi.string(),
+  id_num: Joi.string(),
+  phone_num: Joi.string(),
+});

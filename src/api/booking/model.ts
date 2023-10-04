@@ -35,7 +35,7 @@ const bookingSchema = new Schema(
       type: String,
       default: "Pending",
       enum: {
-        values: ["Pending", "Checked-In", "Checked-Out"],
+        values: ["Pending", "Cancelled", "Checked-In", "Checked-Out"],
         message: "Invalid status",
       },
     },
