@@ -14,4 +14,24 @@ export default class BookingDAL {
       throw error;
     }
   }
+
+  // Get all bookings
+  static async getAll(): Promise<IBookingDoc[]> {
+    try {
+      const booking = await Booking.find();
+      return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get booking by id
+  static async getById(id: string): Promise<IBookingDoc | null> {
+    try {
+      const booking = await Booking.findById(id);
+      return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

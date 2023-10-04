@@ -25,3 +25,35 @@ export const createBooking: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get all bookings
+export const getAllBookings: RequestHandler = async (req, res, next) => {
+  try {
+    const bookings = await Booking.getAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: bookings.length,
+      data: { bookings },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get by id
+export const getById: RequestHandler = async (req, res, next) => {
+  try {
+    const booking = await Booking.getById(req.params.bookingId);
+    if (!booking) return next(new AppError("Booking not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      data: { booking },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
