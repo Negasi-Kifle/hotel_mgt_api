@@ -50,4 +50,23 @@ export default class BookingDAL {
       throw error;
     }
   }
+
+  // Delete all bookings
+  static async deleteAll() {
+    try {
+      await Booking.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<IBookingDoc | null> {
+    try {
+      const booking = await Booking.findByIdAndDelete(id);
+      return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

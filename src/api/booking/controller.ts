@@ -77,3 +77,34 @@ export const updateInfo: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete all bookings
+export const deleteAll: RequestHandler = async (req, res, next) => {
+  try {
+    await Booking.deleteAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "All bookings deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const booking = await Booking.deleteById(req.params.bookingId);
+    if (!booking) return next(new AppError("Booking does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Booking deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

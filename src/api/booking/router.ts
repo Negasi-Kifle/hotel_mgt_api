@@ -6,6 +6,8 @@ import validator from "../../utils/validator";
 import { validateCreateAPI, validateUpdateAPI } from "./validator";
 import {
   createBooking,
+  deleteAll,
+  deleteById,
   getAllBookings,
   getById,
   updateInfo,
@@ -20,7 +22,8 @@ router
     validator(validateCreateAPI),
     createBooking
   )
-  .get(protect, getAllBookings);
+  .get(protect, getAllBookings)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router
   .route("/:bookingId")
@@ -30,7 +33,8 @@ router
     roleAuth("Super-Admin", "Receptionist"),
     validator(validateUpdateAPI),
     updateInfo
-  );
+  )
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 // Export router
 export default router;
