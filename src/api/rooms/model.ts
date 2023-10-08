@@ -17,7 +17,7 @@ const roomsSchema = new Schema(
     room_floor: String,
     room_status: {
       type: String,
-      default: "Vacan Ready",
+      default: "VC",
       enum: {
         values: ["OCC", "VD", "VR", "OOO", "VC"],
         message: "Unknown room status selected",

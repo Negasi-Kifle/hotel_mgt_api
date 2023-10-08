@@ -1,0 +1,31 @@
+import Joi from "joi";
+
+// Validate create-api
+export const validateCreateAPI = Joi.object({
+  house_keeper: Joi.string().required().messages({
+    "any.required": "Please select house keeper",
+  }),
+  supervisor: Joi.string().required().messages({
+    "any.required": "Please assign supervisor",
+  }),
+  task_date: Joi.string().required().messages({
+    "any.required": "Task date is required",
+  }),
+  rooms_task: Joi.array()
+    .items(
+      Joi.object({
+        room: Joi.string().required().messages({
+          "any.required": "Please select at least one room",
+        }),
+        task: Joi.string().valid("Clean", "Full").required().messages({
+          "any.required": "Please select task",
+          "any.only": "Task must be either Clean or Full",
+        }),
+      })
+    )
+    .required()
+    .messages({
+      "any.required":
+        "Please provide a list of rooms and their associated tasks",
+    }),
+});

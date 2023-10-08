@@ -5,6 +5,8 @@ import AppError from "../utils/app_error";
 import userRouter from "../api/users/router";
 import roomsRouter from "../api/rooms/router";
 import bookingRouter from "../api/booking/router";
+import linenRouter from "../api/linen_types/router";
+import hkRouter from "../api/house_keeping/router";
 
 // Third party and custom middlewares
 app.use(express.json());
@@ -17,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/rooms", roomsRouter);
 app.use("/api/v1/bookings", bookingRouter);
+app.use("/api/v1/linentypes", linenRouter);
+app.use("/api/v1/hk", hkRouter);
 
 // Unknown URL
 app.use("*", (req: Request, res: Response, next: NextFunction) => {
