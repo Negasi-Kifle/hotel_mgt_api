@@ -56,16 +56,6 @@ export default class UsersDAL {
     }
   }
 
-  // Get user by id
-  static async getUserById(id: string): Promise<IUsersDoc | null> {
-    try {
-      const user = await UsersModel.findById(id);
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   // Find user by id
   static async getById(id: string): Promise<IUsersDoc | null> {
     try {
