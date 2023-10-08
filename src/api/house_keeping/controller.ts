@@ -116,3 +116,18 @@ export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete all houseking tasks in DB
+export const deleteAll: RequestHandler = async (req, res, next) => {
+  try {
+    await HK.deleteAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "All houseking tasks in DB have been deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

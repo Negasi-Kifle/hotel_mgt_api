@@ -88,4 +88,13 @@ export default class HouseKeepingDAL {
       throw error;
     }
   }
+
+  // Delete all housekeeping data
+  static async deleteAll() {
+    try {
+      await HouseKeeping.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
 }

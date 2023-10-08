@@ -6,6 +6,7 @@ import validator from "../../utils/validator";
 import { validateCreateAPI, validateGetByHKAndDate } from "./validator";
 import {
   createHK,
+  deleteAll,
   getAllHKsInDB,
   getByHKAndTaskDate,
   getByHouseKeeper,
@@ -22,7 +23,8 @@ router
     validator(validateCreateAPI),
     createHK
   )
-  .get(protect, roleAuth("Super-Admin"), getAllHKsInDB);
+  .get(protect, roleAuth("Super-Admin"), getAllHKsInDB)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.get(
   "/taskdate",
