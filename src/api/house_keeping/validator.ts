@@ -29,3 +29,10 @@ export const validateCreateAPI = Joi.object({
         "Please provide a list of rooms and their associated tasks",
     }),
 });
+
+// Validate get-by-housekeeper-and-date
+export const validateGetByHKAndDate = Joi.object({
+  task_date: Joi.date().required().messages({
+    "any.required": "Please select task date",
+  }),
+});
