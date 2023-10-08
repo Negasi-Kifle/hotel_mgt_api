@@ -97,4 +97,14 @@ export default class HouseKeepingDAL {
       throw error;
     }
   }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<IHKDoc | null> {
+    try {
+      const houseKeeping = await HouseKeeping.findByIdAndDelete(id);
+      return houseKeeping;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

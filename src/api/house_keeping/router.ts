@@ -7,6 +7,7 @@ import { validateCreateAPI, validateGetByHKAndDate } from "./validator";
 import {
   createHK,
   deleteAll,
+  deleteById,
   getAllHKsInDB,
   getByHKAndTaskDate,
   getByHouseKeeper,
@@ -48,7 +49,10 @@ router.get(
   getByHouseKeeper
 );
 
-router.route("/:taskId").get(protect, getById);
+router
+  .route("/:taskId")
+  .get(protect, getById)
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 // Export router
 export default router;

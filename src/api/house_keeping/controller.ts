@@ -131,3 +131,20 @@ export const deleteAll: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete by housekeeping id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const housekeeping = await HK.deleteById(req.params.taskId);
+    if (!housekeeping)
+      return next(new AppError("Housekeeping task does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Houskeeping deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
