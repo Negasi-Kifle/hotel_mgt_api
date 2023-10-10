@@ -34,4 +34,20 @@ export default class JobOfTheDayDAL {
       throw error;
     }
   }
+
+  // Update detail of job of the day
+  static async updateInfo(
+    id: string,
+    data: JOTDRequests.IUpdateInput
+  ): Promise<IJOTDDoc | null> {
+    try {
+      const jobOfTheDay = await JobOfTheDay.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return jobOfTheDay;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

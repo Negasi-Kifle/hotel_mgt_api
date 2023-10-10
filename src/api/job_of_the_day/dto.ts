@@ -21,5 +21,9 @@ declare global {
       job: string;
       date: Date;
     }
+    interface IUpdateInput {
+      job: string;
+      date: Date;
+    }
   }
 }

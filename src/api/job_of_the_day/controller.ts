@@ -59,3 +59,22 @@ export const getById: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update job of the day
+export const updateInfo: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <JOTDRequests.IUpdateInput>req.value;
+    const jobOfTheDay = await JOTD.updateInfo(req.params.id, data);
+    if (!jobOfTheDay)
+      return next(new AppError("Job of the day not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Job of the day updated successfully",
+      data: { jobOfTheDay },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

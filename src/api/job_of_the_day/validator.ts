@@ -12,3 +12,9 @@ export const validateCreateAPI = Joi.object({
     "any.required": "Date of the job is required",
   }),
 });
+
+// Validate the update-api
+export const validateUpdateAPI = Joi.object({
+  job: Joi.string(),
+  date: Joi.date(),
+});
