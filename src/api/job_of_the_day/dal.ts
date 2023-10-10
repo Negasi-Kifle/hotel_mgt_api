@@ -112,4 +112,26 @@ export default class JobOfTheDayDAL {
       throw error;
     }
   }
+
+  // Get by housekeeper and date
+  static async getByHKAndDate(
+    house_keeper: string,
+    givenDate: Date
+  ): Promise<IJOTDDoc[]> {
+    try {
+      const nextDay = new Date(givenDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const jobOfTheDay = await JobOfTheDay.find({
+        house_keeper,
+        date: {
+          $gte: givenDate,
+          $lt: nextDay,
+        },
+      });
+      return jobOfTheDay;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

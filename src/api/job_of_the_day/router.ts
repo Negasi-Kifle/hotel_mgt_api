@@ -14,6 +14,7 @@ import {
   deleteById,
   getAllInDB,
   getByDate,
+  getByHKAndDate,
   getByHouseKeeper,
   getById,
   updateInfo,
@@ -40,6 +41,8 @@ router.get(
   roleAuth("Housekeeper", "Super-Admin"),
   getByHouseKeeper
 );
+
+router.get("/housekeeperanddate/:hkId", protect, getByHKAndDate);
 
 router
   .route("/:id")
