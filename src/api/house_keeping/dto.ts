@@ -33,10 +33,14 @@ declare global {
       task_date: Date;
       rooms_task: IRoomsTask;
     }
-    interface IUpdateICleanedInput {
+    interface IUpdateIsCleanedInput {
       room: string;
       is_cleaned: true | false;
       linens_used: ILinensUsed[];
+    }
+    interface IUpdateIsApprovedInput {
+      room: string;
+      is_approved: true | false;
     }
   }
 }

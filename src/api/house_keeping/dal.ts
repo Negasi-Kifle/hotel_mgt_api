@@ -124,4 +124,21 @@ export default class HouseKeepingDAL {
       throw error;
     }
   }
+
+  // Update is_approved
+  static async updateIsApproved(
+    id: string,
+    rooms_task: IRoomsTask[]
+  ): Promise<IHKDoc | null> {
+    try {
+      const housekeeping = await HouseKeeping.findByIdAndUpdate(
+        id,
+        { rooms_task },
+        { runValidators: true, new: true }
+      );
+      return housekeeping;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
