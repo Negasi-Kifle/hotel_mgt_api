@@ -14,7 +14,7 @@ const jotdSchema = new Schema(
       type: String,
       required: [true, "Job description is required"],
     },
-    data: {
+    date: {
       type: Date,
       required: [true, "Date of the job is required"],
     },
