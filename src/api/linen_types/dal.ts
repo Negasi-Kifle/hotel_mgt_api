@@ -35,10 +35,20 @@ export default class LinenDAL {
     }
   }
 
-  // Delete linens
+  // Delete all linen_types
   static async deleteAll() {
     try {
       await Linens.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<ILinenTypesDoc | null> {
+    try {
+      const linenType = await Linens.findByIdAndDelete(id);
+      return linenType;
     } catch (error) {
       throw error;
     }

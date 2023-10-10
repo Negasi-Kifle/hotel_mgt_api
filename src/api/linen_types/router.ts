@@ -4,7 +4,13 @@ import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import { validateCreateAPI } from "./validator";
-import { createLinenType, deleteAll, getAllLinenTypes } from "./controller";
+import {
+  createLinenType,
+  deleteAll,
+  deleteById,
+  getAllLinenTypes,
+  getById,
+} from "./controller";
 
 // Mount routes with their respective controller methods
 router
@@ -17,6 +23,11 @@ router
   )
   .get(protect, getAllLinenTypes)
   .delete(protect, roleAuth("Super-Admin", "Admin"), deleteAll);
+
+router
+  .route("/:id")
+  .get(protect, getById)
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 // Export router
 export default router;

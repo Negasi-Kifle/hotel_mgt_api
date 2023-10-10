@@ -59,3 +59,35 @@ export const deleteAll: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const linenType = await Linens.deleteById(req.params.id);
+    if (!linenType) return next(new AppError("Linen type does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `${linenType.linen_type} deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get linen type by id
+export const getById: RequestHandler = async (req, res, next) => {
+  try {
+    const linenType = await Linens.getById(req.params.id);
+    if (!linenType) return next(new AppError("Linen type not found", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      data: { linenType },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
