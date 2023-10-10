@@ -13,6 +13,8 @@ import {
   deleteAll,
   deleteById,
   getAllInDB,
+  getByDate,
+  getByHouseKeeper,
   getById,
   updateInfo,
   updateIsDone,
@@ -29,6 +31,15 @@ router
   )
   .get(protect, roleAuth("Super-Admin", "Supervisor"), getAllInDB)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
+
+router.get("/jobdate", protect, getByDate);
+
+router.get(
+  "/housekeeper",
+  protect,
+  roleAuth("Housekeeper", "Super-Admin"),
+  getByHouseKeeper
+);
 
 router
   .route("/:id")

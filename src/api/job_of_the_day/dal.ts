@@ -85,4 +85,31 @@ export default class JobOfTheDayDAL {
       throw error;
     }
   }
+
+  // Get by date
+  static async getByDate(givenDate: Date): Promise<IJOTDDoc[]> {
+    try {
+      const nextDay = new Date(givenDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      const jobOfTheDay = await JobOfTheDay.find({
+        date: {
+          $gte: givenDate,
+          $lt: nextDay,
+        },
+      });
+      return jobOfTheDay;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get by housekeeper
+  static async getByHousekeeper(house_keeper: string): Promise<IJOTDDoc[]> {
+    try {
+      const jobOfTheDays = await JobOfTheDay.find({ house_keeper });
+      return jobOfTheDays;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

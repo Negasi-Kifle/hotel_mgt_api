@@ -137,3 +137,41 @@ export const updateIsDone: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get job_of_the_day by date
+export const getByDate: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.query.date) return next(new AppError("Please select date", 400));
+
+    // Job of the day in specific date
+    const jobOfTheDay = await JOTD.getByDate(
+      new Date(req.query.date as string)
+    );
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: jobOfTheDay.length,
+      data: { jobOfTheDay },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get job_of_the_day for the logged in user
+export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
+  try {
+    const loggedInUser = <IUsersDoc>req.user;
+    const jobOfTheDays = await JOTD.getByHousekeeper(loggedInUser.id);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: jobOfTheDays.length,
+      data: { jobOfTheDays },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
