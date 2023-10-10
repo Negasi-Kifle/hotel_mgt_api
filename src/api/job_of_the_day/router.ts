@@ -6,6 +6,8 @@ import validator from "../../utils/validator";
 import { validateCreateAPI, validateUpdateAPI } from "./validator";
 import {
   createJobOfTheDay,
+  deleteAll,
+  deleteById,
   getAllInDB,
   getById,
   updateInfo,
@@ -20,7 +22,8 @@ router
     validator(validateCreateAPI),
     createJobOfTheDay
   )
-  .get(protect, roleAuth("Super-Admin", "Supervisor"), getAllInDB);
+  .get(protect, roleAuth("Super-Admin", "Supervisor"), getAllInDB)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router
   .route("/:id")
@@ -30,6 +33,7 @@ router
     roleAuth("Super-Admin", "Receptionist"),
     validator(validateUpdateAPI),
     updateInfo
-  );
+  )
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 export default router; // Export router

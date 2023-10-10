@@ -50,4 +50,23 @@ export default class JobOfTheDayDAL {
       throw error;
     }
   }
+
+  // Delete all job_of_the_days
+  static async deleteAll() {
+    try {
+      await JobOfTheDay.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<IJOTDDoc | null> {
+    try {
+      const jobOfTheDay = await JobOfTheDay.findByIdAndDelete(id);
+      return jobOfTheDay;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

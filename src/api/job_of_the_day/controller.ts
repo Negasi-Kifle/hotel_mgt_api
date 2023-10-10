@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import JOTD from "./dal";
 import Users from "../users/dal";
 import AppError from "../../utils/app_error";
+import JobOfTheDay from "./model";
 
 // Create job of the day
 export const createJobOfTheDay: RequestHandler = async (req, res, next) => {
@@ -73,6 +74,38 @@ export const updateInfo: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       message: "Job of the day updated successfully",
       data: { jobOfTheDay },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete all
+export const deleteAll: RequestHandler = async (req, res, next) => {
+  try {
+    await JOTD.deleteAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "All job of the days have been deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const jobOfTheDay = await JOTD.deleteById(req.params.id);
+    if (!jobOfTheDay)
+      return next(new AppError("Job of the day does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Job of the day has been deleted successfully",
     });
   } catch (error) {
     next(error);
