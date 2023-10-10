@@ -56,3 +56,13 @@ export const validateIsCleaned = Joi.object({
     })
   ),
 });
+
+// Validate the is_approved api
+export const validateIsApproved = Joi.object({
+  room: Joi.string().required().messages({
+    "any.required": "Please select room",
+  }),
+  is_approved: Joi.boolean().required().messages({
+    "any.required": "Approval status is required",
+  }),
+});

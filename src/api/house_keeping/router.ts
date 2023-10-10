@@ -6,6 +6,7 @@ import validator from "../../utils/validator";
 import {
   validateCreateAPI,
   validateGetByHKAndDate,
+  validateIsApproved,
   validateIsCleaned,
 } from "./validator";
 import {
@@ -17,6 +18,7 @@ import {
   getByHouseKeeper,
   getById,
   getByTaskDate,
+  updateIsApproved,
   updateIsCleaned,
 } from "./controller";
 
@@ -65,6 +67,15 @@ router.patch(
   roleAuth("Housekeeper", "Super-Admin"),
   validator(validateIsCleaned),
   updateIsCleaned
+);
+
+router.patch(
+  "/approval/:id",
+  protect,
+  protect,
+  roleAuth("Super-Admin", "Supervisor"),
+  validator(validateIsApproved),
+  updateIsApproved
 );
 
 // Export router

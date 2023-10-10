@@ -154,7 +154,7 @@ export const deleteById: RequestHandler = async (req, res, next) => {
 // Update "is_cleaned"
 export const updateIsCleaned: RequestHandler = async (req, res, next) => {
   try {
-    const data = <HKRequests.IUpdateICleanedInput>req.value; // Incoming data
+    const data = <HKRequests.IUpdateIsCleanedInput>req.value; // Incoming data
     const loggedInUser = <IUsersDoc>req.user; // Logged in user
 
     // Check housekeeping document exists
@@ -199,6 +199,51 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     res.status(200).json({
       status: "SUCCESS",
       message: "Cleanness of updated successfully",
+      data: { housekeeping },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update is_approved
+export const updateIsApproved: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <HKRequests.IUpdateIsApprovedInput>req.value; // Incoming data
+    const loggedInUser = <IUsersDoc>req.user; // Logged in user
+
+    // Check housekeeping document exists
+    const hk = await HK.getByTaskId(req.params.id);
+    if (!hk) {
+      return next(new AppError("Housekeeping document does not exist", 404));
+    }
+
+    // Check the logged in user is the assigned supervisor
+    if (loggedInUser.id !== hk.supervisor) {
+      return next(
+        new AppError("You are not assigned to supervise this task", 400)
+      );
+    }
+
+    // Find the selected room
+    const hkRooms = hk.rooms_task;
+
+    const roomToBeUpdated = hkRooms.find((room) => {
+      return room.room.id === data.room;
+    });
+    if (!roomToBeUpdated) {
+      return next(new AppError("Room does not exist in the task", 404));
+    }
+
+    roomToBeUpdated.is_approved = data.is_approved; // Update is_cleaned
+
+    // Update the housekeeping document
+    const housekeeping = await HK.updateIsApproved(req.params.id, hkRooms);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Approval of room cleanness updated successfully",
       data: { housekeeping },
     });
   } catch (error) {

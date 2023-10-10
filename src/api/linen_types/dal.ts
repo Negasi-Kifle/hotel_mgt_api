@@ -35,10 +35,20 @@ export default class LinenDAL {
     }
   }
 
-  // Delete linens
+  // Delete all linen_types
   static async deleteAll() {
     try {
       await Linens.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<ILinenTypesDoc | null> {
+    try {
+      const linenType = await Linens.findByIdAndDelete(id);
+      return linenType;
     } catch (error) {
       throw error;
     }
@@ -48,6 +58,22 @@ export default class LinenDAL {
   static async getById(id: string): Promise<ILinenTypesDoc | null> {
     try {
       const linenType = await Linens.findById(id);
+      return linenType;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update linen_type
+  static async updateInfo(
+    id: string,
+    data: LinenTypeRequests.IUpdateInput
+  ): Promise<ILinenTypesDoc | null> {
+    try {
+      const linenType = await Linens.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
       return linenType;
     } catch (error) {
       throw error;
