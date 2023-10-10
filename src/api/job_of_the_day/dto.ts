@@ -21,5 +21,17 @@ declare global {
       job: string;
       date: Date;
     }
+    interface IUpdateInput {
+      job: string;
+      date: Date;
+    }
+    interface IUpdateIsDone {
+      time_finished: Date;
+      rooms_cleaned: number;
+      trol_and_chem_basket: boolean;
+      corrider_cleaned: boolean;
+      is_done: boolean;
+      approved_by: string;
+    }
   }
 }
