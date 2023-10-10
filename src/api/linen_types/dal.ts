@@ -63,4 +63,20 @@ export default class LinenDAL {
       throw error;
     }
   }
+
+  // Update linen_type
+  static async updateInfo(
+    id: string,
+    data: LinenTypeRequests.IUpdateInput
+  ): Promise<ILinenTypesDoc | null> {
+    try {
+      const linenType = await Linens.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return linenType;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

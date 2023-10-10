@@ -9,3 +9,9 @@ export const validateCreateAPI = Joi.object({
     "any.required": "Color code is required",
   }),
 });
+
+// Validate the update-api
+export const validateUpdateAPI = Joi.object({
+  linen_type: Joi.string(),
+  color_code: Joi.string(),
+});

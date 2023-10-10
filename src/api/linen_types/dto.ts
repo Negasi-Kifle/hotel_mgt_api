@@ -15,5 +15,10 @@ declare global {
       linen_slug: string;
       color_code: string;
     }
+    interface IUpdateInput {
+      linen_type: string;
+      linen_slug: string;
+      color_code: string;
+    }
   }
 }
