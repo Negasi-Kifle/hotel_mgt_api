@@ -3,14 +3,21 @@ const router = Router();
 import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
-import { validateCreateAPI, validateGetByHKAndDate } from "./validator";
+import {
+  validateCreateAPI,
+  validateGetByHKAndDate,
+  validateIsCleaned,
+} from "./validator";
 import {
   createHK,
+  deleteAll,
+  deleteById,
   getAllHKsInDB,
   getByHKAndTaskDate,
   getByHouseKeeper,
   getById,
   getByTaskDate,
+  updateIsCleaned,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -22,7 +29,8 @@ router
     validator(validateCreateAPI),
     createHK
   )
-  .get(protect, roleAuth("Super-Admin"), getAllHKsInDB);
+  .get(protect, roleAuth("Super-Admin"), getAllHKsInDB)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.get(
   "/taskdate",
@@ -46,7 +54,18 @@ router.get(
   getByHouseKeeper
 );
 
-router.route("/:taskId").get(protect, getById);
+router
+  .route("/:taskId")
+  .get(protect, getById)
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
+
+router.patch(
+  "/iscleaned/:id",
+  protect,
+  roleAuth("Housekeeper", "Super-Admin"),
+  validator(validateIsCleaned),
+  updateIsCleaned
+);
 
 // Export router
 export default router;

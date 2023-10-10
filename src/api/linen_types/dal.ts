@@ -43,4 +43,14 @@ export default class LinenDAL {
       throw error;
     }
   }
+
+  // Get linen type by id
+  static async getById(id: string): Promise<ILinenTypesDoc | null> {
+    try {
+      const linenType = await Linens.findById(id);
+      return linenType;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
