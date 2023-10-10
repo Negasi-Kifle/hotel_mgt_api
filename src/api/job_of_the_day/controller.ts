@@ -159,11 +159,10 @@ export const getByDate: RequestHandler = async (req, res, next) => {
   }
 };
 
-// Get job_of_the_day by housekeeper - for the logged in user
+// Get job_of_the_day by housekeeper - for admin + the logged in user
 export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
   try {
-    const loggedInUser = <IUsersDoc>req.user;
-    const jobOfTheDays = await JOTD.getByHousekeeper(loggedInUser.id);
+    const jobOfTheDays = await JOTD.getByHousekeeper(req.params.hkId);
 
     // Response
     res.status(200).json({
@@ -176,7 +175,7 @@ export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
   }
 };
 
-// Get job of the day for housekeeper - for the logged in user
+// Get job of the day for housekeeper - for admin + the logged in user
 export const getByHKAndDate: RequestHandler = async (req, res, next) => {
   try {
     if (!req.query.date) return next(new AppError("Please select date", 400));

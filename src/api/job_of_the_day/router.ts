@@ -36,7 +36,7 @@ router
 router.get("/jobdate", protect, getByDate);
 
 router.get(
-  "/housekeeper",
+  "/housekeeper/:hkId",
   protect,
   roleAuth("Housekeeper", "Super-Admin"),
   getByHouseKeeper
