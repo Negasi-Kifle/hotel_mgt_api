@@ -1,4 +1,5 @@
 import { Document } from "mongoose";
+import IRoomsDoc from "../rooms/dto";
 
 // Structure for house_keeping model
 export default interface IHKDoc extends Document {
@@ -10,7 +11,7 @@ export default interface IHKDoc extends Document {
 
 // Interface for rooms and tasks
 export interface IRoomsTask {
-  room: string;
+  room: IRoomsDoc;
   task: "Clean" | "Full";
   linens_used: ILinensUsed[];
   is_cleaned: true | false;
@@ -31,6 +32,11 @@ declare global {
       supervisor: string;
       task_date: Date;
       rooms_task: IRoomsTask;
+    }
+    interface IUpdateICleanedInput {
+      room: string;
+      is_cleaned: true | false;
+      linens_used: ILinensUsed[];
     }
   }
 }

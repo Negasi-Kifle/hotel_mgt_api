@@ -44,7 +44,7 @@ router
 router.patch(
   "/status/:roomId",
   protect,
-  roleAuth("Super-Admin", "Supervisor", "House-Keeper"),
+  roleAuth("Super-Admin", "Supervisor", "Housekeeper"),
   validator(validateUpdateStatusAPI),
   updateStatus
 );

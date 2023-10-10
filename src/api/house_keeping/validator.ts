@@ -36,3 +36,23 @@ export const validateGetByHKAndDate = Joi.object({
     "any.required": "Please select task date",
   }),
 });
+
+// Validate the is_cleaned API
+export const validateIsCleaned = Joi.object({
+  room: Joi.string().required().messages({
+    "any.required": "Please select room",
+  }),
+  is_cleaned: Joi.boolean().required().messages({
+    "any.required": "Cleaness status is required",
+  }),
+  linens_used: Joi.array().items(
+    Joi.object({
+      linen_type: Joi.string().required().messages({
+        "any.required": "Linen type is required",
+      }),
+      amount: Joi.number().required().messages({
+        "any.required": "Amount of linens consumed is required",
+      }),
+    })
+  ),
+});

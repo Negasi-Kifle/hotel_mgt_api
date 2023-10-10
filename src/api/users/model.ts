@@ -46,7 +46,7 @@ const usersSchema = new Schema(
       type: String,
       required: [true, "Role is required"],
       enum: {
-        values: ["Supervisor", "House-Keeper", "Receptionist", "Super-Admin"],
+        values: ["Supervisor", "Housekeeper", "Receptionist", "Super-Admin"],
         message: "Unknown role selected",
       },
     },

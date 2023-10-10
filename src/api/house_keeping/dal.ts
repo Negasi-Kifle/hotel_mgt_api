@@ -1,4 +1,4 @@
-import IHKDoc from "./dto";
+import IHKDoc, { IRoomsTask } from "./dto";
 import HouseKeeping from "./model";
 
 // Data access layer for house keeping model
@@ -102,6 +102,23 @@ export default class HouseKeepingDAL {
   static async deleteById(id: string): Promise<IHKDoc | null> {
     try {
       const houseKeeping = await HouseKeeping.findByIdAndDelete(id);
+      return houseKeeping;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update is_cleaned
+  static async updateIsCleaned(
+    id: string,
+    rooms_task: IRoomsTask[]
+  ): Promise<IHKDoc | null> {
+    try {
+      const houseKeeping = await HouseKeeping.findByIdAndUpdate(
+        id,
+        { rooms_task },
+        { runValidators: true, new: true }
+      );
       return houseKeeping;
     } catch (error) {
       throw error;
