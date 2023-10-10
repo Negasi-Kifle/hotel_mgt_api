@@ -164,9 +164,9 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     }
 
     // Check the logged in user is the assigned housekeeper
-    // if (loggedInUser.id !== hk.house_keeper) {
-    //   return next(new AppError("You are not assigned for this task", 400));
-    // }
+    if (loggedInUser.id !== hk.house_keeper) {
+      return next(new AppError("You are not assigned for this task", 400));
+    }
 
     // Find the selected room
     const hkRooms = hk.rooms_task;
