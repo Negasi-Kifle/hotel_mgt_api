@@ -69,4 +69,20 @@ export default class JobOfTheDayDAL {
       throw error;
     }
   }
+
+  // Update "is_done"
+  static async updateIsDone(
+    id: string,
+    data: JOTDRequests.IUpdateIsDone
+  ): Promise<IJOTDDoc | null> {
+    try {
+      const jobOfTheDay = await JobOfTheDay.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return jobOfTheDay;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

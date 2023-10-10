@@ -3,7 +3,11 @@ const router = Router();
 import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
-import { validateCreateAPI, validateUpdateAPI } from "./validator";
+import {
+  validateCreateAPI,
+  validateIsDone,
+  validateUpdateAPI,
+} from "./validator";
 import {
   createJobOfTheDay,
   deleteAll,
@@ -11,6 +15,7 @@ import {
   getAllInDB,
   getById,
   updateInfo,
+  updateIsDone,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -35,5 +40,13 @@ router
     updateInfo
   )
   .delete(protect, roleAuth("Super-Admin"), deleteById);
+
+router.patch(
+  "/isdone/:id",
+  protect,
+  roleAuth("Super-Admin", "Admin", "Supervisor"),
+  validator(validateIsDone),
+  updateIsDone
+);
 
 export default router; // Export router

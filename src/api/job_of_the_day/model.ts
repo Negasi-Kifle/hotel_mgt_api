@@ -18,6 +18,28 @@ const jotdSchema = new Schema(
       type: Date,
       required: [true, "Date of the job is required"],
     },
+    time_finished: Date,
+    rooms_cleaned: {
+      type: Number,
+      default: 0,
+      min: [0, "Rooms cleaned cannot be less than zero"],
+    },
+    trol_and_chem_basket: {
+      type: Boolean,
+      default: false,
+    },
+    corrider_cleaned: {
+      type: Boolean,
+      default: false,
+    },
+    is_done: {
+      type: Boolean,
+      default: false,
+    },
+    approved_by: {
+      type: Schema.ObjectId,
+      ref: "Users",
+    },
   },
   {
     writeConcern: {
