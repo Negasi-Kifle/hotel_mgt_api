@@ -3,7 +3,11 @@ const router = Router();
 import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
-import { validateCreateAPI, validateUpdateAPI } from "./validator";
+import {
+  validateCreateAPI,
+  validateFreeRoomsAPI,
+  validateUpdateAPI,
+} from "./validator";
 import {
   createBooking,
   deleteAll,
@@ -26,7 +30,12 @@ router
   .get(protect, getAllBookings)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
-router.get("/freerooms", protect, getFreeRooms);
+router.get(
+  "/freerooms",
+  protect,
+  validator(validateFreeRoomsAPI),
+  getFreeRooms
+);
 
 router
   .route("/:bookingId")

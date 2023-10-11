@@ -20,7 +20,10 @@ export default class BookingDAL {
   // Get all bookings
   static async getAll(): Promise<IBookingDoc[]> {
     try {
-      const booking = await Booking.find();
+      const booking = await Booking.find().populate({
+        path: "room_id",
+        select: "room_id room_floor",
+      });
       return booking;
     } catch (error) {
       throw error;
