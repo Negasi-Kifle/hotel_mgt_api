@@ -32,5 +32,9 @@ declare global {
       id_num: string;
       phone_num: string;
     }
+    interface IGetFreeRooms {
+      arr_date: Date;
+      dep_date: Date;
+    }
   }
 }

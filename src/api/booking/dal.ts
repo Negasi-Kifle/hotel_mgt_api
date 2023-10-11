@@ -1,5 +1,7 @@
 import Booking from "./model";
 import IBookingDoc from "./dto";
+import Rooms from "../rooms/model";
+import IRoomsDoc from "../rooms/dto";
 
 // Data access layer for booking data
 export default class BookingDAL {
@@ -65,6 +67,30 @@ export default class BookingDAL {
     try {
       const booking = await Booking.findByIdAndDelete(id);
       return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get free rooms
+  static async getFreeRooms(
+    arrDate: Date,
+    depDate: Date
+  ): Promise<IRoomsDoc[]> {
+    try {
+      const bookings = await Booking.find({
+        $or: [
+          { arr_date: { $lt: arrDate }, dep_date: { $gt: depDate } }, // Reservation overlaps the given date range
+          { arr_date: { $gte: arrDate, $lt: depDate } }, // Reservation starts within the given date range
+          { dep_date: { $gt: arrDate, $lte: depDate } }, // Reservation ends within the given date range
+        ],
+      }).select("room_id");
+
+      const bookedRoomIds = bookings.map((booking) => booking.room_id);
+
+      // Fetch all rooms except the ones that are booked
+      const freeRooms = await Rooms.find({ _id: { $nin: bookedRoomIds } });
+      return freeRooms;
     } catch (error) {
       throw error;
     }

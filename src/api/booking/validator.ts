@@ -35,3 +35,13 @@ export const validateUpdateAPI = Joi.object({
   id_num: Joi.string(),
   phone_num: Joi.string(),
 });
+
+// Validate get-free-rooms api
+export const validateFreeRoomsAPI = Joi.object({
+  arr_date: Joi.date().required().messages({
+    "any.required": "When will the client arrive?",
+  }),
+  dep_date: Joi.date().required().messages({
+    "any.required": "When will the client depart?",
+  }),
+});

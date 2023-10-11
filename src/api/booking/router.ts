@@ -10,6 +10,7 @@ import {
   deleteById,
   getAllBookings,
   getById,
+  getFreeRooms,
   updateInfo,
 } from "./controller";
 
@@ -24,6 +25,8 @@ router
   )
   .get(protect, getAllBookings)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
+
+router.get("/freerooms", protect, getFreeRooms);
 
 router
   .route("/:bookingId")

@@ -108,3 +108,21 @@ export const deleteById: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get free rooms
+export const getFreeRooms: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <BookingRequest.IGetFreeRooms>req.value;
+
+    const freeRooms = await Booking.getFreeRooms(data.arr_date, data.dep_date);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: freeRooms.length,
+      data: { freeRooms },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
