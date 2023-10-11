@@ -3,6 +3,7 @@ import { Document } from "mongoose";
 // Interface for the mongoDB document of rooms model
 export default interface IRoomsDoc extends Document {
   room_id: string;
+  room_id_slug: string;
   room_type: string;
   room_price: number;
   room_floor: string;
@@ -14,6 +15,7 @@ declare global {
   namespace RoomRequest {
     interface ICreateInput {
       room_id: string;
+      room_id_slug: string;
       room_type: string;
       room_price: number;
       room_floor: string;

@@ -8,6 +8,11 @@ const roomsSchema = new Schema(
       type: String,
       required: [true, "Room id is required"],
     },
+    room_id_slug: {
+      type: String,
+      unique: true,
+      required: [true, "Room number slug is required"],
+    },
     room_type: String,
     room_price: {
       type: Number,

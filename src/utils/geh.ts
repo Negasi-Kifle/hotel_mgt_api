@@ -43,6 +43,8 @@ export default (
       err = new AppError("Phone number already used", 400);
     } else if (err.message.includes("email")) {
       err = new AppError("Email already used", 400);
+    } else if (err.message.includes("room_id_slug")) {
+      err = new AppError("Room number already created", 400);
     } else {
       err = new AppError("Duplicate data found", 400);
     }

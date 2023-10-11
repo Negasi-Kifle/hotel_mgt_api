@@ -3,7 +3,7 @@ import Joi, { string } from "joi";
 // Validate the create-api
 export const validateCreateAPI = Joi.object({
   room_id: Joi.string().required().messages({
-    "any.required": "Please provide room name or number.",
+    "any.required": "Please provide room number.",
   }),
   room_type: Joi.string(),
   room_price: Joi.number(),
@@ -16,7 +16,7 @@ export const validateCreateAPI = Joi.object({
 // Validate update-api
 export const validateUpdateAPI = Joi.object({
   room_id: Joi.string().messages({
-    "any.required": "Please provide room name or number.",
+    "any.required": "Please provide room number.",
   }),
   room_type: Joi.string(),
   room_price: Joi.number(),

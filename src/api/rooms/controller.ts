@@ -1,12 +1,15 @@
 import { RequestHandler } from "express";
 import RoomsDAL from "./dal";
 import AppError from "../../utils/app_error";
+import slugify from "slugify";
 
 // Create room
 export const createRoom: RequestHandler = async (req, res, next) => {
   try {
     // Incoming data
     const data = <RoomRequest.ICreateInput>req.value;
+    data.room_id_slug = slugify(data.room_id, "_");
+    data.room_id_slug = data.room_id_slug.toLowerCase();
 
     // Create room
     const room = await RoomsDAL.createRoom(data);

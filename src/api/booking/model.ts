@@ -19,6 +19,7 @@ const bookingSchema = new Schema(
     phone_num: String,
     room_id: {
       type: Schema.ObjectId,
+      ref: "Rooms",
       required: [true, "Room number is required"],
     },
     arr_date: {
