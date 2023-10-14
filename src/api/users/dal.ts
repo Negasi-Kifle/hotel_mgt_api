@@ -163,4 +163,21 @@ export default class UsersDAL {
       throw error;
     }
   }
+
+  // Update role
+  static async updateRole(
+    id: string,
+    data: UserRequest.IUpdateRole
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(
+        id,
+        { role: data.role },
+        { runValidators: true, new: true }
+      );
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

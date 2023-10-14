@@ -273,3 +273,21 @@ export const resetPswd: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update role
+export const updateRole: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <UserRequest.IUpdateRole>req.value;
+    const user = await Users.updateRole(req.params.id, data);
+    if (!user) return next(new AppError("User does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `Role of ${user.first_name} has been updated successfully`,
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
