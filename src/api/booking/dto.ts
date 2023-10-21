@@ -24,17 +24,27 @@ declare global {
       phone_num: string;
       room_id: string;
       arr_date: Date;
+      arr_time: Date;
       dep_date: Date;
+      dep_time: Date;
     }
     interface IUpdateInfoInput {
       first_name: string;
       last_name: string;
       id_num: string;
       phone_num: string;
+      room_id: string;
+      arr_date: Date;
+      arr_time: Date;
+      dep_date: Date;
+      dep_time: Date;
     }
     interface IGetFreeRooms {
       arr_date: Date;
       dep_date: Date;
+    }
+    interface IUpdateStatus {
+      status: string;
     }
   }
 }

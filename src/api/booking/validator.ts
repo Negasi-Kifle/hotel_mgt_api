@@ -22,10 +22,13 @@ export const validateCreateAPI = Joi.object({
   dep_date: Joi.date().required().messages({
     "any.required": "Departure date is required",
   }),
-  status: Joi.string().valid("Pending", "Checked-In", "Checked-Out").messages({
-    "any.only":
-      "Status must be one of the following: Pending, Checked-In, Checked-Out",
-  }),
+  dep_time: Joi.date(),
+  status: Joi.string()
+    .valid("Pending", "Cancelled", "Arrived", "Departed")
+    .messages({
+      "any.only":
+        "Status must be one of the following: Pending, Cancelled, Arrived, Departed",
+    }),
 });
 
 // Validate update-api
@@ -34,6 +37,11 @@ export const validateUpdateAPI = Joi.object({
   last_name: Joi.string(),
   id_num: Joi.string(),
   phone_num: Joi.string(),
+  room_id: Joi.string(),
+  arr_date: Joi.date(),
+  arr_time: Joi.date(),
+  dep_date: Joi.date(),
+  dep_time: Joi.date(),
 });
 
 // Validate get-free-rooms api
@@ -44,4 +52,17 @@ export const validateFreeRoomsAPI = Joi.object({
   dep_date: Joi.date().required().messages({
     "any.required": "When will the client depart?",
   }),
+});
+
+// Validate update-status api
+export const validateStatusAPI = Joi.object({
+  status: Joi.string()
+    .valid("Pending", "Cancelled", "Arrived", "Departed")
+    .required()
+    .messages({
+      "any.required": "Status is required",
+      "string.empty": "Status can not be empty",
+      "any.only":
+        "Status must be one of the following: Pending, Cancelled, Arrived, Departed",
+    }),
 });

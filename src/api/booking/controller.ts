@@ -9,6 +9,17 @@ export const createBooking: RequestHandler = async (req, res, next) => {
     // Incoming data
     const data = <BookingRequest.ICreateInput>req.value;
 
+    // If "arr_time" and "dep_time" are null, set them to a default value of 10AM and 12PM respectively
+    if (!data.arr_time) {
+      const arrDate = new Date(data.arr_date);
+      data.arr_time = new Date(arrDate.setHours(10));
+    }
+
+    if (!data.dep_time) {
+      const depTime = new Date(data.dep_date);
+      data.dep_time = new Date(depTime.setHours(12));
+    }
+
     // create booking
     const booking = await Booking.createBooking(data);
 
@@ -61,6 +72,7 @@ export const getById: RequestHandler = async (req, res, next) => {
 // Update booking info
 export const updateInfo: RequestHandler = async (req, res, next) => {
   try {
+    // Incoming data
     const data = <BookingRequest.IUpdateInfoInput>req.value;
 
     // Update booking
@@ -112,15 +124,41 @@ export const deleteById: RequestHandler = async (req, res, next) => {
 // Get free rooms
 export const getFreeRooms: RequestHandler = async (req, res, next) => {
   try {
-    const data = <BookingRequest.IGetFreeRooms>req.value;
+    const { arr_date, dep_date } = req.query;
+    if (!arr_date || !dep_date)
+      return next(
+        new AppError("Arrival and departure dates are required", 400)
+      );
 
-    const freeRooms = await Booking.getFreeRooms(data.arr_date, data.dep_date);
+    const freeRooms = await Booking.getFreeRooms(
+      arr_date as string,
+      dep_date as string
+    );
 
     // Response
     res.status(200).json({
       status: "SUCCESS",
       results: freeRooms.length,
       data: { freeRooms },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update booking status
+export const updateStatus: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <BookingRequest.IUpdateStatus>req.value;
+
+    const booking = await Booking.updateStatus(req.params.bookingId, data);
+    if (!booking) return next(new AppError("Booking does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `Status of booking by ${booking.first_name} updated successfully`,
+      data: { booking },
     });
   } catch (error) {
     next(error);

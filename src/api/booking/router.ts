@@ -5,7 +5,7 @@ import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import {
   validateCreateAPI,
-  validateFreeRoomsAPI,
+  validateStatusAPI,
   validateUpdateAPI,
 } from "./validator";
 import {
@@ -16,6 +16,7 @@ import {
   getById,
   getFreeRooms,
   updateInfo,
+  updateStatus,
 } from "./controller";
 
 // Mount roles with their  respective controller method
@@ -30,11 +31,14 @@ router
   .get(protect, getAllBookings)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
-router.get(
-  "/freerooms",
+router.get("/freerooms", protect, getFreeRooms);
+
+router.patch(
+  "/:bookingId/status",
   protect,
-  validator(validateFreeRoomsAPI),
-  getFreeRooms
+  roleAuth("Super-Admin"),
+  validator(validateStatusAPI),
+  updateStatus
 );
 
 router

@@ -258,16 +258,16 @@ export const resetPswd: RequestHandler = async (req, res, next) => {
     if (!userData) return next(new AppError("User not found", 404));
 
     // Generate random password
-    const new_pswd = generatePassword();
+    // const new_pswd = generatePassword();
 
     // Reset password
-    const user = await Users.resetPswd(userData, new_pswd);
+    const user = await Users.resetPswd(userData, "holiday@123");
 
     // Response
     res.status(200).json({
       status: "SUCCESS",
       message: `${user.first_name} ${user.last_name}'s password has been reset successfully`,
-      data: { user, new_pswd },
+      data: { user, new_pswd: "holiday@123" },
     });
   } catch (error) {
     next(error);
@@ -278,7 +278,7 @@ export const resetPswd: RequestHandler = async (req, res, next) => {
 export const updateRole: RequestHandler = async (req, res, next) => {
   try {
     const data = <UserRequest.IUpdateRole>req.value;
-    const user = await Users.updateRole(req.params.id, data);
+    const user = await Users.updateRole(req.params.userId, data);
     if (!user) return next(new AppError("User does not exist", 404));
 
     // Response

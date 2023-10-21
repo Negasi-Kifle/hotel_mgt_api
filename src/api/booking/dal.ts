@@ -20,10 +20,7 @@ export default class BookingDAL {
   // Get all bookings
   static async getAll(): Promise<IBookingDoc[]> {
     try {
-      const booking = await Booking.find().populate({
-        path: "room_id",
-        select: "room_id room_floor",
-      });
+      const booking = await Booking.find().populate({ path: "room_id" });
       return booking;
     } catch (error) {
       throw error;
@@ -33,7 +30,7 @@ export default class BookingDAL {
   // Get booking by id
   static async getById(id: string): Promise<IBookingDoc | null> {
     try {
-      const booking = await Booking.findById(id);
+      const booking = await Booking.findById(id).populate({ path: "room_id" });
       return booking;
     } catch (error) {
       throw error;
@@ -77,23 +74,56 @@ export default class BookingDAL {
 
   // Get free rooms
   static async getFreeRooms(
-    arrDate: Date,
-    depDate: Date
+    arrDate: string,
+    depDate: string
   ): Promise<IRoomsDoc[]> {
     try {
       const bookings = await Booking.find({
-        $or: [
-          { arr_date: { $lt: arrDate }, dep_date: { $gt: depDate } }, // Reservation overlaps the given date range
-          { arr_date: { $gte: arrDate, $lt: depDate } }, // Reservation starts within the given date range
-          { dep_date: { $gt: arrDate, $lte: depDate } }, // Reservation ends within the given date range
+        $and: [
+          {
+            status: { $in: ["Pending", "Arrived"] },
+          },
+          {
+            $or: [
+              {
+                arr_date: { $lt: new Date(arrDate) },
+                dep_date: { $gt: new Date(depDate) },
+              }, // Reservation overlaps the given date range
+              { arr_date: { $gte: new Date(arrDate), $lt: new Date(depDate) } }, // Reservation starts within the given date range
+              { dep_date: { $gt: new Date(arrDate), $lte: new Date(depDate) } }, // Reservation ends within the given date range
+            ],
+          },
         ],
       }).select("room_id");
 
       const bookedRoomIds = bookings.map((booking) => booking.room_id);
 
       // Fetch all rooms except the ones that are booked
-      const freeRooms = await Rooms.find({ _id: { $nin: bookedRoomIds } });
+      const freeRooms = await Rooms.find({
+        $and: [
+          { _id: { $nin: bookedRoomIds } },
+          {
+            room_status: "VR",
+          },
+        ],
+      });
       return freeRooms;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update booking status
+  static async updateStatus(
+    id: string,
+    status: BookingRequest.IUpdateStatus
+  ): Promise<IBookingDoc | null> {
+    try {
+      const booking = await Booking.findByIdAndUpdate(id, status, {
+        runValidators: true,
+        new: true,
+      });
+      return booking;
     } catch (error) {
       throw error;
     }
