@@ -14,7 +14,9 @@ import {
   deleteById,
   getAllBookings,
   getById,
+  getByStatus,
   getFreeRooms,
+  getRoomsResvInDate,
   updateInfo,
   updateStatus,
 } from "./controller";
@@ -32,6 +34,7 @@ router
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.get("/freerooms", protect, getFreeRooms);
+router.get("/reservedrooms", protect, getRoomsResvInDate);
 
 router.patch(
   "/:bookingId/status",
@@ -40,6 +43,8 @@ router.patch(
   validator(validateStatusAPI),
   updateStatus
 );
+
+router.get("/status", protect, getByStatus);
 
 router
   .route("/:bookingId")

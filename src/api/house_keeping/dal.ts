@@ -141,4 +141,20 @@ export default class HouseKeepingDAL {
       throw error;
     }
   }
+
+  // Update housekeeping task detail
+  static async updateHKDetail(
+    id: string,
+    data: HKRequests.IUpdateInput
+  ): Promise<IHKDoc | null> {
+    try {
+      const houseKeeping = await HouseKeeping.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      });
+      return houseKeeping;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

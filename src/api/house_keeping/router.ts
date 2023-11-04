@@ -4,13 +4,16 @@ import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import {
-  validateCreateAPI,
+  validateHousekeeperTaskAPI,
   validateGetByHKAndDate,
   validateIsApproved,
   validateIsCleaned,
+  validateUpdateAPI,
+  validateSupervisorTaskAPI,
 } from "./validator";
 import {
-  createHK,
+  createHousekeeperTask,
+  createSupervisorTask,
   deleteAll,
   deleteById,
   getAllHKsInDB,
@@ -18,6 +21,7 @@ import {
   getByHouseKeeper,
   getById,
   getByTaskDate,
+  updateHKDetail,
   updateIsApproved,
   updateIsCleaned,
 } from "./controller";
@@ -28,11 +32,19 @@ router
   .post(
     protect,
     roleAuth("Super-Admin", "Admin"),
-    validator(validateCreateAPI),
-    createHK
+    validator(validateHousekeeperTaskAPI),
+    createHousekeeperTask
   )
   .get(protect, roleAuth("Super-Admin"), getAllHKsInDB)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
+
+router.post(
+  "/supervising",
+  protect,
+  roleAuth("Super-Admin", "Receptionist"),
+  validator(validateSupervisorTaskAPI),
+  createSupervisorTask
+);
 
 router.get(
   "/taskdate",
@@ -59,7 +71,13 @@ router.get(
 router
   .route("/:taskId")
   .get(protect, getById)
-  .delete(protect, roleAuth("Super-Admin"), deleteById);
+  .delete(protect, roleAuth("Super-Admin"), deleteById)
+  .patch(
+    protect,
+    roleAuth("Super-Admin"),
+    validator(validateUpdateAPI),
+    updateHKDetail
+  );
 
 router.patch(
   "/iscleaned/:id",

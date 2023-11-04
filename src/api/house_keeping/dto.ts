@@ -7,6 +7,7 @@ export default interface IHKDoc extends Document {
   supervisor: string;
   task_date: Date;
   rooms_task: IRoomsTask[];
+  hk_or_supervising: "Housekeeping" | "Supervising";
 }
 
 // Interface for rooms and tasks
@@ -31,7 +32,8 @@ declare global {
       house_keeper: string;
       supervisor: string;
       task_date: Date;
-      rooms_task: IRoomsTask;
+      rooms_task: IRoomsTask[];
+      hk_or_supervising: "Housekeeping" | "Supervising";
     }
     interface IUpdateIsCleanedInput {
       room: string;
@@ -41,6 +43,12 @@ declare global {
     interface IUpdateIsApprovedInput {
       room: string;
       is_approved: true | false;
+    }
+    interface IUpdateInput {
+      house_keeper: string;
+      supervisor: string;
+      task_date: Date;
+      rooms_task: IRoomsTask[];
     }
   }
 }

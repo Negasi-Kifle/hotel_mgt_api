@@ -23,9 +23,6 @@ export const createBooking: RequestHandler = async (req, res, next) => {
     // create booking
     const booking = await Booking.createBooking(data);
 
-    // Update status of room to "OCC"
-    await Rooms.updateRoomStatus(data.room_id, { room_status: "OCC" });
-
     // Response
     res.status(200).json({
       status: "SUCCESS",
@@ -40,7 +37,8 @@ export const createBooking: RequestHandler = async (req, res, next) => {
 // Get all bookings
 export const getAllBookings: RequestHandler = async (req, res, next) => {
   try {
-    const bookings = await Booking.getAll();
+    console.log(req.query.status);
+    const bookings = await Booking.getAll(req.query.status as string);
 
     // Response
     res.status(200).json({
@@ -159,6 +157,46 @@ export const updateStatus: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       message: `Status of booking by ${booking.first_name} updated successfully`,
       data: { booking },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get bookings by status
+export const getByStatus: RequestHandler = async (req, res, next) => {
+  try {
+    const status = req.query.status as string;
+    const bookings = await Booking.getByStatus(status);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: bookings.length,
+      data: { bookings },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get rooms/bookings reserved in specific date
+export const getRoomsResvInDate: RequestHandler = async (req, res, next) => {
+  try {
+    const { selected_date } = req.query;
+
+    // Check date is selected
+    if (!selected_date)
+      return next(new AppError("Selected date is required", 400));
+
+    // Fetch reserved rooms
+    const rooms = await Booking.reservedRoomsInDate(selected_date as string);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: rooms.length,
+      data: { rooms },
     });
   } catch (error) {
     next(error);

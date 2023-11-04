@@ -55,10 +55,14 @@ export default (
     err = new AppError("Please login", 401);
   }
 
+  if (err.name === "TokenExpiredError") {
+    err = new AppError("Please login", 401);
+  }
+
   // Invalid date
-  // if (err.name === "CastError") {
-  //   err = new AppError("Invalid input", 400);
-  // }
+  if (err.name === "CastError") {
+    err = new AppError("Invalid input", 400);
+  }
 
   // Different error for different environments
   if (configs.env === "DEVELOPMENT") {

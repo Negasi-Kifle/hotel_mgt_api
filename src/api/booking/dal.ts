@@ -18,9 +18,22 @@ export default class BookingDAL {
   }
 
   // Get all bookings
-  static async getAll(): Promise<IBookingDoc[]> {
+  static async getAll(status?: string): Promise<IBookingDoc[]> {
     try {
-      const booking = await Booking.find().populate({ path: "room_id" });
+      let booking;
+      if (
+        status === "Pending" ||
+        status === "Arrived" ||
+        status === "Cancelled" ||
+        status === "Departed"
+      ) {
+        booking = await Booking.find({ status }).populate({
+          path: "room_id",
+        });
+      } else {
+        booking = await Booking.find().populate({ path: "room_id" });
+      }
+
       return booking;
     } catch (error) {
       throw error;
@@ -100,12 +113,7 @@ export default class BookingDAL {
 
       // Fetch all rooms except the ones that are booked
       const freeRooms = await Rooms.find({
-        $and: [
-          { _id: { $nin: bookedRoomIds } },
-          {
-            room_status: "VR",
-          },
-        ],
+        $and: [{ _id: { $nin: bookedRoomIds } }],
       });
       return freeRooms;
     } catch (error) {
@@ -124,6 +132,36 @@ export default class BookingDAL {
         new: true,
       });
       return booking;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get booking by status
+  static async getByStatus(status: string): Promise<IBookingDoc[]> {
+    try {
+      const bookings = await Booking.find({ status });
+      return bookings;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get rooms reserved in specific date
+  static async reservedRoomsInDate(
+    selectedDate: string
+  ): Promise<IBookingDoc[]> {
+    try {
+      const reservedRoomsInDate = await Booking.find({
+        $and: [
+          { arr_date: { $lte: new Date(selectedDate) } },
+          { dep_date: { $gte: new Date(selectedDate) } },
+        ],
+      }).populate({
+        path: "room_id",
+        select: "room_id room_type room_price room_floor room_status",
+      });
+      return reservedRoomsInDate;
     } catch (error) {
       throw error;
     }
