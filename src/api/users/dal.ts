@@ -47,9 +47,14 @@ export default class UsersDAL {
   }
 
   // Find all users
-  static async getAllUsers(): Promise<IUsersDoc[]> {
+  static async getAllUsers(role?: string): Promise<IUsersDoc[]> {
     try {
-      const users = await UsersModel.find();
+      let users;
+      if (role) {
+        users = await UsersModel.find({ role });
+      } else {
+        users = await UsersModel.find();
+      }
       return users;
     } catch (error) {
       throw error;

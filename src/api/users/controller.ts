@@ -65,7 +65,8 @@ export const login: RequestHandler = async (req, res, next) => {
 // Get all users
 export const getAllUsers: RequestHandler = async (req, res, next) => {
   try {
-    const users = await Users.getAllUsers();
+    const { role } = req.query;
+    const users = await Users.getAllUsers(role as string);
 
     // Response
     res.status(200).json({

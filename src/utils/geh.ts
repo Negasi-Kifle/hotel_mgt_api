@@ -60,9 +60,9 @@ export default (
   }
 
   // Invalid date
-  if (err.name === "CastError") {
-    err = new AppError("Invalid input", 400);
-  }
+  // if (err.name === "CastError") {
+  //   err = new AppError("Invalid input", 400);
+  // }
 
   // Different error for different environments
   if (configs.env === "DEVELOPMENT") {
