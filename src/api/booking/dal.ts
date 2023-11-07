@@ -152,10 +152,12 @@ export default class BookingDAL {
     selectedDate: string
   ): Promise<IBookingDoc[]> {
     try {
+      const housekeepingDate = new Date(selectedDate);
+      housekeepingDate.setHours(housekeepingDate.getHours() + 3);
       const reservedRoomsInDate = await Booking.find({
         $and: [
-          { arr_date: { $lte: new Date(selectedDate) } },
-          { dep_date: { $gte: new Date(selectedDate) } },
+          { arr_date: { $lte: new Date(housekeepingDate) } },
+          { dep_date: { $gte: new Date(housekeepingDate) } },
         ],
       }).populate({
         path: "room_id",
