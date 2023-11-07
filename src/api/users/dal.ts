@@ -47,9 +47,14 @@ export default class UsersDAL {
   }
 
   // Find all users
-  static async getAllUsers(): Promise<IUsersDoc[]> {
+  static async getAllUsers(role?: string): Promise<IUsersDoc[]> {
     try {
-      const users = await UsersModel.find();
+      let users;
+      if (role) {
+        users = await UsersModel.find({ role });
+      } else {
+        users = await UsersModel.find();
+      }
       return users;
     } catch (error) {
       throw error;
@@ -158,6 +163,23 @@ export default class UsersDAL {
       user.password = new_pswd;
       user.default_password = new_pswd;
       await user.save();
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update role
+  static async updateRole(
+    id: string,
+    data: UserRequest.IUpdateRole
+  ): Promise<IUsersDoc | null> {
+    try {
+      const user = await UsersModel.findByIdAndUpdate(
+        id,
+        { role: data.role },
+        { runValidators: true, new: true }
+      );
       return user;
     } catch (error) {
       throw error;

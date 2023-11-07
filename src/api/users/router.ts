@@ -9,6 +9,7 @@ import {
   validateCreateUserAPI,
   validateLoginAPI,
   validatePersonalInfoAPI,
+  validateRole,
   validateStatusAPI,
 } from "./validator";
 import {
@@ -24,6 +25,7 @@ import {
   resetPswd,
   showPersonalInfo,
   updatePersonalInfo,
+  updateRole,
 } from "./controller";
 
 // Mount routes with their handler methods
@@ -63,6 +65,13 @@ router.patch(
 );
 
 router.patch("/:userId/reset", protect, roleAuth("Super-Admin"), resetPswd);
+router.patch(
+  "/:userId/role",
+  protect,
+  roleAuth("Super-Admin"),
+  validator(validateRole),
+  updateRole
+);
 
 router
   .route("/:userId")

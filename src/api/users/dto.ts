@@ -50,5 +50,8 @@ declare global {
       current_pswd: string;
       new_pswd: string;
     }
+    interface IUpdateRole {
+      role: string;
+    }
   }
 }

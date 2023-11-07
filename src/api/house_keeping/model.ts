@@ -49,6 +49,13 @@ const hkSchema = new Schema(
         },
       },
     ],
+    hk_or_supervising: {
+      type: String,
+      enum: {
+        values: ["Housekeeping", "Supervising"],
+        message: "Please select Housekeeping or Supervising",
+      },
+    },
   },
   {
     writeConcern: {

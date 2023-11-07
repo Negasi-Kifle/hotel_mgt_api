@@ -84,4 +84,14 @@ export default class RoomsDAL {
       throw error;
     }
   }
+
+  // Get by room number
+  static async getByRoomNum(room_id: any): Promise<IRoomsDoc | null> {
+    try {
+      const rooms = await Rooms.findOne({ room_id });
+      return rooms;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

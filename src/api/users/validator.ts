@@ -60,3 +60,15 @@ export const validateChangePswdAPI = Joi.object({
   current_pswd: Joi.string().required(),
   new_pswd: Joi.string().required(),
 });
+
+// Validate update_role api
+export const validateRole = Joi.object({
+  role: Joi.string()
+    .valid("Supervisor", "Housekeeper", "Receptionist", "Super-Admin")
+    .required()
+    .messages({
+      "any.required": "Role is required",
+      "any.only":
+        "Role must be one of the following: Supervisor, Housekeeper, Receptionist Super-Admin",
+    }),
+});

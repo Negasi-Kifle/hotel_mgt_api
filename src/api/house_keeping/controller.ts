@@ -5,16 +5,32 @@ import AppError from "../../utils/app_error";
 import HouseKeeping from "./model";
 import IUsersDoc from "../users/dto";
 import LinenDAL from "../linen_types/dal";
+import RoomsDAL from "../rooms/dal";
 
-// Create house keeping task
-export const createHK: RequestHandler = async (req, res, next) => {
+// Create house keeping task for housekeeper
+export const createHousekeeperTask: RequestHandler = async (req, res, next) => {
   try {
-    const data = <HKRequests.ICreateInput>req.value;
+    const data = req.body;
+
+    // Find rooms by room_id and replace the room numbers in the incoming data by the document id
+    const roomTasks = data.rooms_task;
+    for (let roomTask of roomTasks) {
+      const roomByNum = await RoomsDAL.getByRoomNum(roomTask.room);
+      if (!roomByNum)
+        return next(new AppError("Unknown room number selected", 404));
+      data.rooms_task.forEach((incomingRoomTask: any, index: number) => {
+        if (incomingRoomTask.room === roomByNum.room_id)
+          data.rooms_task[index]["room"] = roomByNum.id;
+      });
+    }
 
     // Check house keeper exists
     const houseKeeper = await Users.getById(data.house_keeper);
     if (!houseKeeper)
       return next(new AppError("Housekeeper does not exist", 404));
+
+    // Sepcify task is "Housekeeping"
+    data.hk_or_supervising = "Housekeeping";
 
     // Create house keeping
     const houseKeeping = await HK.createHK(data);
@@ -24,6 +40,45 @@ export const createHK: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       message: `The housekeeping task has been successfully created for ${houseKeeper.first_name}`,
       data: { houseKeeping },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Create house keeping task for supervisor
+export const createSupervisorTask: RequestHandler = async (req, res, next) => {
+  try {
+    const data = req.body;
+
+    // Find rooms by room_id and replace the room numbers in the incoming data by the document id
+    const roomTasks = data.rooms_task;
+    for (let roomTask of roomTasks) {
+      const roomByNum = await RoomsDAL.getByRoomNum(roomTask.room);
+      if (!roomByNum)
+        return next(new AppError("Unknown room number selected", 404));
+      data.rooms_task.forEach((incomingRoomTask: any, index: number) => {
+        if (incomingRoomTask.room === roomByNum.room_id)
+          data.rooms_task[index]["room"] = roomByNum.id;
+      });
+    }
+
+    // Check supervisor exists
+    const supervisor = await Users.getById(data.house_keeper);
+    if (!supervisor)
+      return next(new AppError("Supervisor does not exist", 404));
+
+    // Sepcify task is "Supervising"
+    data.hk_or_supervising = "Supervising";
+
+    // Create house keeping
+    const supervising = await HK.createHK(data);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: `The supervising task has been successfully created for ${supervisor.first_name}`,
+      data: { supervising },
     });
   } catch (error) {
     next(error);
@@ -245,6 +300,42 @@ export const updateIsApproved: RequestHandler = async (req, res, next) => {
       status: "SUCCESS",
       message: "Approval of room cleanness updated successfully",
       data: { housekeeping },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update housekeeping detail
+export const updateHKDetail: RequestHandler = async (req, res, next) => {
+  try {
+    const data = req.body;
+
+    // Find rooms by room_id and replace the room numbers in the incoming data by the document id
+    const roomTasks = data.rooms_task;
+    for (let roomTask of roomTasks) {
+      const roomByNum = await RoomsDAL.getByRoomNum(roomTask.room);
+      if (!roomByNum)
+        return next(new AppError("Unknown room number selected", 404));
+      data.rooms_task.forEach((incomingRoomTask: any, index: number) => {
+        if (incomingRoomTask.room === roomByNum.room_id)
+          data.rooms_task[index]["room"] = roomByNum.id;
+      });
+    }
+
+    // Check house keeper exists
+    const houseKeeper = await Users.getById(data.house_keeper);
+    if (!houseKeeper)
+      return next(new AppError("Housekeeper does not exist", 404));
+
+    // Update house keeping
+    const houseKeeping = await HK.updateHKDetail(req.params.taskId, data);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Housekeeping task updated successfully",
+      data: { houseKeeping },
     });
   } catch (error) {
     next(error);
