@@ -21,6 +21,7 @@ import {
   getByHouseKeeper,
   getById,
   getByTaskDate,
+  getTasksByType,
   updateHKDetail,
   updateIsApproved,
   updateIsCleaned,
@@ -44,6 +45,13 @@ router.post(
   roleAuth("Super-Admin", "Receptionist"),
   validator(validateSupervisorTaskAPI),
   createSupervisorTask
+);
+
+router.get(
+  "/tasksbytype",
+  protect,
+  roleAuth("Super-Admin", "Receptionist", "Supervisor"),
+  getTasksByType
 );
 
 router.get(
