@@ -324,7 +324,8 @@ export const updateHKDetail: RequestHandler = async (req, res, next) => {
     }
 
     // Check house keeper exists
-    const houseKeeper = await Users.getById(data.house_keeper);
+    const userId = data.house_keeper ? data.house_keeper : data.supervisor;
+    const houseKeeper = await Users.getById(userId);
     if (!houseKeeper)
       return next(new AppError("Housekeeper does not exist", 404));
 
