@@ -157,4 +157,24 @@ export default class HouseKeepingDAL {
       throw error;
     }
   }
+
+  // Get by tasks type
+  static async getTasksByType(hk_or_supervising: string): Promise<IHKDoc[]> {
+    try {
+      if (hk_or_supervising === "Supervising") {
+        const task = await HouseKeeping.find({ hk_or_supervising }).populate({
+          path: "supervisor",
+        });
+        return task;
+      } else {
+        const task = await HouseKeeping.find({ hk_or_supervising }).populate({
+          path: "house_keeper",
+        });
+
+        return task;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }

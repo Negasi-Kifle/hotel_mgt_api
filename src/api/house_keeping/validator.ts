@@ -94,12 +94,8 @@ export const validateIsApproved = Joi.object({
 // Validate the api to update housekeeping task
 // Validate create-api
 export const validateUpdateAPI = Joi.object({
-  house_keeper: Joi.string().required().messages({
-    "any.required": "Please select house keeper",
-  }),
-  supervisor: Joi.string().required().messages({
-    "any.required": "Please assign supervisor",
-  }),
+  house_keeper: Joi.string(),
+  supervisor: Joi.string(),
   task_date: Joi.string().required().messages({
     "any.required": "Task date is required",
   }),
@@ -120,4 +116,4 @@ export const validateUpdateAPI = Joi.object({
       "any.required":
         "Please provide a list of rooms and their associated tasks",
     }),
-});
+}).or("house_keeper", "supervisor");

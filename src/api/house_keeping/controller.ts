@@ -64,7 +64,7 @@ export const createSupervisorTask: RequestHandler = async (req, res, next) => {
     }
 
     // Check supervisor exists
-    const supervisor = await Users.getById(data.house_keeper);
+    const supervisor = await Users.getById(data.supervisor);
     if (!supervisor)
       return next(new AppError("Supervisor does not exist", 404));
 
@@ -324,7 +324,8 @@ export const updateHKDetail: RequestHandler = async (req, res, next) => {
     }
 
     // Check house keeper exists
-    const houseKeeper = await Users.getById(data.house_keeper);
+    const userId = data.house_keeper ? data.house_keeper : data.supervisor;
+    const houseKeeper = await Users.getById(userId);
     if (!houseKeeper)
       return next(new AppError("Housekeeper does not exist", 404));
 
@@ -339,5 +340,22 @@ export const updateHKDetail: RequestHandler = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+// Get tasks by task type
+export const getTasksByType: RequestHandler = async (req, res, nex) => {
+  try {
+    const { hk_or_supervising } = req.query;
+    const hkTasks = await HK.getTasksByType(hk_or_supervising as string);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: hkTasks.length,
+      data: { hkTasks },
+    });
+  } catch (error) {
+    nex(error);
   }
 };
