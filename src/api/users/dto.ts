@@ -33,7 +33,6 @@ declare global {
       password: string;
     }
     interface IChangeDefaultPswdInput {
-      default_pswd: string;
       new_pswd: string;
     }
     interface IChangeStatusInput {

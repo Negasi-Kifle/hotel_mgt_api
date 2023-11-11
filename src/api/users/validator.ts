@@ -35,10 +35,6 @@ export const validateChangeDefPswdAPI = Joi.object({
   new_pswd: Joi.string().required().messages({
     "any.required": "New password is required",
   }),
-
-  default_pswd: Joi.string().required().messages({
-    "any.required": "Default password is required",
-  }),
 });
 
 // Validate user status api
