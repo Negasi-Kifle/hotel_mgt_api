@@ -36,7 +36,7 @@ router
     validator(validateHousekeeperTaskAPI),
     createHousekeeperTask
   )
-  .get(protect, roleAuth("Super-Admin"), getAllHKsInDB)
+  .get(protect, roleAuth("Super-Admin", "Housekeeper"), getAllHKsInDB)
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.post(
@@ -50,7 +50,7 @@ router.post(
 router.get(
   "/tasksbytype",
   protect,
-  roleAuth("Super-Admin", "Receptionist", "Supervisor"),
+  roleAuth("Super-Admin", "Receptionist", "Supervisor", "Housekeeper"),
   getTasksByType
 );
 
