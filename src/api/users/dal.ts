@@ -162,6 +162,7 @@ export default class UsersDAL {
     try {
       user.password = new_pswd;
       user.default_password = new_pswd;
+      user.is_default_password = true;
       await user.save();
       return user;
     } catch (error) {

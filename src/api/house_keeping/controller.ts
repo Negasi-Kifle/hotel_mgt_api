@@ -161,7 +161,11 @@ export const getByHKAndTaskDate: RequestHandler = async (req, res, next) => {
 // Get all tasks of a housekeeper
 export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
   try {
-    const houseKeepings = await HK.getByHouseKeeper(req.params.id);
+    const { selected_date } = req.query;
+    const houseKeepings = await HK.getByHouseKeeper(
+      req.params.id,
+      selected_date as string
+    );
 
     // Response
     res.status(200).json({
@@ -213,13 +217,13 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     const loggedInUser = <IUsersDoc>req.user; // Logged in user
 
     // Check housekeeping document exists
-    const hk = await HK.getByTaskId(req.params.id);
+    const hk = await HK.getHousekeeping(req.params.id);
     if (!hk) {
       return next(new AppError("Housekeeping document does not exist", 404));
     }
 
     // Check the logged in user is the assigned housekeeper
-    if (loggedInUser.id !== hk.house_keeper) {
+    if (loggedInUser.id !== hk.house_keeper.toString()) {
       return next(new AppError("You are not assigned for this task", 400));
     }
 
@@ -227,7 +231,7 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     const hkRooms = hk.rooms_task;
 
     const roomToBeUpdated = hkRooms.find((room) => {
-      return room.room.id === data.room;
+      return room.room.toString() === data.room;
     });
     if (!roomToBeUpdated) {
       return next(new AppError("Room does not exist in the task", 404));
@@ -253,7 +257,7 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     // Response
     res.status(200).json({
       status: "SUCCESS",
-      message: "Cleanness of updated successfully",
+      message: "Cleanness of a room updated successfully",
       data: { housekeeping },
     });
   } catch (error) {

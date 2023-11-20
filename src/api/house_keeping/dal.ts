@@ -1,3 +1,4 @@
+import moment from "moment";
 import IHKDoc, { IRoomsTask } from "./dto";
 import HouseKeeping from "./model";
 
@@ -41,6 +42,16 @@ export default class HouseKeepingDAL {
     }
   }
 
+  // Get by id
+  static async getHousekeeping(id: string): Promise<IHKDoc | null> {
+    try {
+      const houseKeeping = await HouseKeeping.findById(id).sort("-task_date");
+      return houseKeeping;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Get housekeepings by task date
   static async getByTaskDate(task_date: Date): Promise<IHKDoc[]> {
     try {
@@ -76,14 +87,31 @@ export default class HouseKeepingDAL {
   }
 
   // Get all tasks of a housekeeper
-  static async getByHouseKeeper(house_keeper: string): Promise<IHKDoc[]> {
+  static async getByHouseKeeper(
+    house_keeper: string,
+    selected_date?: string
+  ): Promise<IHKDoc[]> {
     try {
-      const tasks = await HouseKeeping.find({ house_keeper })
-        .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
-        .populate({ path: "rooms_task.room", select: "room_id" })
-        .sort("-task_date");
-      return tasks;
+      if (selected_date) {
+        const selctedDate = moment(new Date(selected_date)).format(
+          "YYYY-MM-DD"
+        );
+        const tasks = await HouseKeeping.find({
+          $and: [{ house_keeper }, { task_date: { $eq: selctedDate } }],
+        })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      } else {
+        const tasks = await HouseKeeping.find({ house_keeper })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      }
     } catch (error) {
       throw error;
     }
