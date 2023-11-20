@@ -72,7 +72,7 @@ router.get(
 router.get(
   "/hktasks/:id",
   protect,
-  roleAuth("Super-Admin", "Admin"),
+  roleAuth("Super-Admin", "Admin", "Housekeeper", "Supervisor"),
   getByHouseKeeper
 );
 
