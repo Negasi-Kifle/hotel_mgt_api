@@ -37,7 +37,6 @@ export const createBooking: RequestHandler = async (req, res, next) => {
 // Get all bookings
 export const getAllBookings: RequestHandler = async (req, res, next) => {
   try {
-    console.log(req.query.status);
     const bookings = await Booking.getAll(req.query.status as string);
 
     // Response

@@ -20,6 +20,7 @@ import {
   getByHKAndTaskDate,
   getByHouseKeeper,
   getById,
+  getBySupervisor,
   getByTaskDate,
   getTasksByType,
   updateHKDetail,
@@ -74,6 +75,13 @@ router.get(
   protect,
   roleAuth("Super-Admin", "Admin", "Housekeeper", "Supervisor"),
   getByHouseKeeper
+);
+
+router.get(
+  "/supervisingtasks/:id",
+  protect,
+  roleAuth("Supervisor", "Super-Admin", "Admin"),
+  getBySupervisor
 );
 
 router

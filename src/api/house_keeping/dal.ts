@@ -117,6 +117,43 @@ export default class HouseKeepingDAL {
     }
   }
 
+  // Get all tasks of a housekeeper
+  static async getBySupervisor(
+    supervisor: string,
+    selected_date?: string
+  ): Promise<IHKDoc[]> {
+    try {
+      if (selected_date) {
+        const selctedDate = moment(new Date(selected_date)).format(
+          "YYYY-MM-DD"
+        );
+        const tasks = await HouseKeeping.find({
+          $and: [
+            { supervisor },
+            { task_date: { $eq: selctedDate } },
+            { hk_or_supervising: "Supervising" },
+          ],
+        })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      } else {
+        const tasks = await HouseKeeping.find({
+          $and: [{ supervisor }, { hk_or_supervising: "Supervising" }],
+        })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Delete all housekeeping data
   static async deleteAll() {
     try {

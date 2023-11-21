@@ -178,6 +178,26 @@ export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Get task by supevisor and date
+export const getBySupervisor: RequestHandler = async (req, res, next) => {
+  try {
+    const { selected_date } = req.query;
+    const supervisings = await HK.getBySupervisor(
+      req.params.id,
+      selected_date as string
+    );
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: supervisings.length,
+      data: { supervisings },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Delete all houseking tasks in DB
 export const deleteAll: RequestHandler = async (req, res, next) => {
   try {
