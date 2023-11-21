@@ -292,13 +292,13 @@ export const updateIsApproved: RequestHandler = async (req, res, next) => {
     const loggedInUser = <IUsersDoc>req.user; // Logged in user
 
     // Check housekeeping document exists
-    const hk = await HK.getByTaskId(req.params.id);
+    const hk = await HK.getHousekeeping(req.params.id);
     if (!hk) {
       return next(new AppError("Housekeeping document does not exist", 404));
     }
 
     // Check the logged in user is the assigned supervisor
-    if (loggedInUser.id !== hk.supervisor) {
+    if (loggedInUser.id !== hk.supervisor.toString()) {
       return next(
         new AppError("You are not assigned to supervise this task", 400)
       );
@@ -308,7 +308,7 @@ export const updateIsApproved: RequestHandler = async (req, res, next) => {
     const hkRooms = hk.rooms_task;
 
     const roomToBeUpdated = hkRooms.find((room) => {
-      return room.room.id === data.room;
+      return room.room.toString() === data.room;
     });
     if (!roomToBeUpdated) {
       return next(new AppError("Room does not exist in the task", 404));
