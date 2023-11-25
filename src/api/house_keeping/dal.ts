@@ -71,8 +71,11 @@ export default class HouseKeepingDAL {
   static async getHKsWithoutSupervisor(task_date: string): Promise<IHKDoc[]> {
     try {
       const houseKeepings = await HouseKeeping.find({
-        task_date: new Date(task_date),
-        supervisor: { $exists: false },
+        $and: [
+          { task_date: new Date(task_date) },
+          { supervisor: { $exists: false } },
+          { hk_or_supervising: "Housekeeping" },
+        ],
       })
         .sort("-task_date")
         .populate({ path: "house_keeper", select: "first_name last_name" })
