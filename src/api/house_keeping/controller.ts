@@ -6,6 +6,7 @@ import HouseKeeping from "./model";
 import IUsersDoc from "../users/dto";
 import LinenDAL from "../linen_types/dal";
 import RoomsDAL from "../rooms/dal";
+import moment from "moment";
 
 // Create house keeping task for housekeeper
 export const createHousekeeperTask: RequestHandler = async (req, res, next) => {
@@ -126,6 +127,28 @@ export const getByTaskDate: RequestHandler = async (req, res, next) => {
 
     const task_date = new Date(req.query.task_date as string);
     const houseKeepings = await HK.getByTaskDate(task_date);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: houseKeepings.length,
+      data: { houseKeepings },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get housekeeping tasks with no supervisor in specific date
+export const HKsWithoutSupervisor: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.query.task_date)
+      return next(new AppError("Please select task date", 400));
+
+    const task_date = moment(new Date(req.query.task_date as string)).format(
+      "YYYY-MM-DD"
+    );
+    const houseKeepings = await HK.getHKsWithoutSupervisor(task_date);
 
     // Response
     res.status(200).json({

@@ -22,6 +22,7 @@ import {
   getById,
   getBySupervisor,
   getByTaskDate,
+  HKsWithoutSupervisor,
   getTasksByType,
   updateHKDetail,
   updateIsApproved,
@@ -61,6 +62,8 @@ router.get(
   roleAuth("Super-Admin", "Admin", "Receptionist"),
   getByTaskDate
 );
+
+router.get("/hkswithoutsupervisor", protect, HKsWithoutSupervisor);
 
 router.get(
   "/hkandtaskdate/:id",

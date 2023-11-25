@@ -67,6 +67,24 @@ export default class HouseKeepingDAL {
     }
   }
 
+  // Get housekeepings by task date
+  static async getHKsWithoutSupervisor(task_date: string): Promise<IHKDoc[]> {
+    try {
+      const houseKeepings = await HouseKeeping.find({
+        task_date: new Date(task_date),
+        supervisor: { $exists: false },
+      })
+        .sort("-task_date")
+        .populate({ path: "house_keeper", select: "first_name last_name" })
+        .populate({ path: "supervisor", select: "first_name last_name" })
+        .populate({ path: "rooms_task.room", select: "room_id" })
+        .sort("-task_date");
+      return houseKeepings;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Get by housekeeper and task_date
   static async getByHkAndTaskDate(
     hk: string,
