@@ -7,6 +7,7 @@ export default class HouseKeepingDAL {
   // Create house keeping
   static async createHK(data: HKRequests.ICreateInput): Promise<IHKDoc> {
     try {
+      console.log(data);
       const houseKeeping = await HouseKeeping.create(data);
       return houseKeeping;
     } catch (error) {
@@ -19,7 +20,6 @@ export default class HouseKeepingDAL {
     try {
       const hks = await HouseKeeping.find()
         .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return hks;
@@ -33,7 +33,6 @@ export default class HouseKeepingDAL {
     try {
       const houseKeeping = await HouseKeeping.findById(id)
         .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return houseKeeping;
@@ -58,7 +57,6 @@ export default class HouseKeepingDAL {
       const houseKeepings = await HouseKeeping.find({ task_date })
         .sort("-task_date")
         .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return houseKeepings;

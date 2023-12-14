@@ -10,10 +10,10 @@ import {
   validateIsCleaned,
   validateUpdateAPI,
   validateSupervisorTaskAPI,
+  validateSupervisorTaskAPI2,
 } from "./validator";
 import {
   createHousekeeperTask,
-  createSupervisorTask,
   deleteAll,
   deleteById,
   getAllHKsInDB,
@@ -27,6 +27,7 @@ import {
   updateHKDetail,
   updateIsApproved,
   updateIsCleaned,
+  createSupervisingTask,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -45,8 +46,8 @@ router.post(
   "/supervising",
   protect,
   roleAuth("Super-Admin", "Receptionist"),
-  validator(validateSupervisorTaskAPI),
-  createSupervisorTask
+  validator(validateSupervisorTaskAPI2),
+  createSupervisingTask
 );
 
 router.get(

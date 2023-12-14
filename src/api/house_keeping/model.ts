@@ -8,10 +8,6 @@ const hkSchema = new Schema(
       type: Schema.ObjectId,
       ref: "Users",
     },
-    supervisor: {
-      type: Schema.ObjectId,
-      ref: "Users",
-    },
     task_date: {
       type: Date,
       required: [true, "Task date is required"],
@@ -46,6 +42,10 @@ const hkSchema = new Schema(
         is_approved: {
           type: Boolean,
           default: false,
+        },
+        supervisor: {
+          type: Schema.ObjectId,
+          ref: "Users",
         },
       },
     ],

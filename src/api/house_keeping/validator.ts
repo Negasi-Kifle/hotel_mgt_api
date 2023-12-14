@@ -54,6 +54,29 @@ export const validateSupervisorTaskAPI = Joi.object({
     }),
 });
 
+// Validate create-api
+export const validateSupervisorTaskAPI2 = Joi.object({
+  supervisor: Joi.string().required().messages({
+    "any.required": "Please assign supervisor",
+  }),
+  hks_and_room_tasks: Joi.array()
+    .items(
+      Joi.object({
+        hk_id: Joi.string().required().messages({
+          "any.required": "Please select the housekeeping task",
+        }),
+        room_task_id: Joi.string().required().messages({
+          "any.required": "Please select room task",
+        }),
+      })
+    )
+    .required()
+    .messages({
+      "any.required":
+        "Please provide a list of rooms and their associated tasks",
+    }),
+});
+
 // Validate get-by-housekeeper-and-date
 export const validateGetByHKAndDate = Joi.object({
   task_date: Joi.date().required().messages({
