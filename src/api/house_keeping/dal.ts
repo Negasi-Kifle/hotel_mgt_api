@@ -7,6 +7,7 @@ export default class HouseKeepingDAL {
   // Create house keeping
   static async createHK(data: HKRequests.ICreateInput): Promise<IHKDoc> {
     try {
+      console.log(data);
       const houseKeeping = await HouseKeeping.create(data);
       return houseKeeping;
     } catch (error) {
@@ -19,7 +20,6 @@ export default class HouseKeepingDAL {
     try {
       const hks = await HouseKeeping.find()
         .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return hks;
@@ -33,7 +33,6 @@ export default class HouseKeepingDAL {
     try {
       const houseKeeping = await HouseKeeping.findById(id)
         .populate({ path: "house_keeper", select: "first_name last_name" })
-        .populate({ path: "supervisor", select: "first_name last_name" })
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return houseKeeping;
@@ -56,6 +55,26 @@ export default class HouseKeepingDAL {
   static async getByTaskDate(task_date: Date): Promise<IHKDoc[]> {
     try {
       const houseKeepings = await HouseKeeping.find({ task_date })
+        .sort("-task_date")
+        .populate({ path: "house_keeper", select: "first_name last_name" })
+        .populate({ path: "rooms_task.room", select: "room_id" })
+        .sort("-task_date");
+      return houseKeepings;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get housekeepings by task date
+  static async getHKsWithoutSupervisor(task_date: string): Promise<IHKDoc[]> {
+    try {
+      const houseKeepings = await HouseKeeping.find({
+        $and: [
+          { task_date: new Date(task_date) },
+          { supervisor: { $exists: false } },
+          { hk_or_supervising: "Housekeeping" },
+        ],
+      })
         .sort("-task_date")
         .populate({ path: "house_keeper", select: "first_name last_name" })
         .populate({ path: "supervisor", select: "first_name last_name" })
@@ -106,6 +125,43 @@ export default class HouseKeepingDAL {
         return tasks;
       } else {
         const tasks = await HouseKeeping.find({ house_keeper })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get all tasks of a housekeeper
+  static async getBySupervisor(
+    supervisor: string,
+    selected_date?: string
+  ): Promise<IHKDoc[]> {
+    try {
+      if (selected_date) {
+        const selctedDate = moment(new Date(selected_date)).format(
+          "YYYY-MM-DD"
+        );
+        const tasks = await HouseKeeping.find({
+          $and: [
+            { supervisor },
+            { task_date: { $eq: selctedDate } },
+            { hk_or_supervising: "Supervising" },
+          ],
+        })
+          .populate({ path: "house_keeper", select: "first_name last_name" })
+          .populate({ path: "supervisor", select: "first_name last_name" })
+          .populate({ path: "rooms_task.room", select: "room_id" })
+          .sort("-task_date");
+        return tasks;
+      } else {
+        const tasks = await HouseKeeping.find({
+          $and: [{ supervisor }, { hk_or_supervising: "Supervising" }],
+        })
           .populate({ path: "house_keeper", select: "first_name last_name" })
           .populate({ path: "supervisor", select: "first_name last_name" })
           .populate({ path: "rooms_task.room", select: "room_id" })

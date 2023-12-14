@@ -11,12 +11,13 @@ export default interface IHKDoc extends Document {
 }
 
 // Interface for rooms and tasks
-export interface IRoomsTask {
+export interface IRoomsTask extends Document {
   room: IRoomsDoc;
   task: "Clean" | "Full";
   linens_used: ILinensUsed[];
   is_cleaned: true | false;
   is_approved: true | false;
+  supervisor: string;
 }
 
 // Interface for linens used
@@ -25,12 +26,17 @@ export interface ILinensUsed {
   amount: number;
 }
 
+// Structure of incoming data for creating supervising task
+export interface IHKAndRoomTask {
+  hk_id: string;
+  room_task_id: string;
+}
+
 // Structure of data in incoming requests
 declare global {
   namespace HKRequests {
     interface ICreateInput {
       house_keeper: string;
-      supervisor: string;
       task_date: Date;
       rooms_task: IRoomsTask[];
       hk_or_supervising: "Housekeeping" | "Supervising";
@@ -46,9 +52,12 @@ declare global {
     }
     interface IUpdateInput {
       house_keeper: string;
-      supervisor: string;
       task_date: Date;
       rooms_task: IRoomsTask[];
+    }
+    interface ICreateSupervisingTask {
+      hks_and_room_tasks: IHKAndRoomTask[];
+      supervisor: string;
     }
   }
 }

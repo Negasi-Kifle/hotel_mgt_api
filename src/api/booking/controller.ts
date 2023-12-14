@@ -2,6 +2,7 @@ import AppError from "../../utils/app_error";
 import { RequestHandler } from "express";
 import Booking from "./dal";
 import Rooms from "../rooms/dal";
+import moment from "moment";
 
 // Create booking
 export const createBooking: RequestHandler = async (req, res, next) => {
@@ -37,7 +38,6 @@ export const createBooking: RequestHandler = async (req, res, next) => {
 // Get all bookings
 export const getAllBookings: RequestHandler = async (req, res, next) => {
   try {
-    console.log(req.query.status);
     const bookings = await Booking.getAll(req.query.status as string);
 
     // Response
@@ -189,8 +189,13 @@ export const getRoomsResvInDate: RequestHandler = async (req, res, next) => {
     if (!selected_date)
       return next(new AppError("Selected date is required", 400));
 
+    // Format the selected date
+    const selectedDate = moment(new Date(selected_date as string)).format(
+      "YYYY-MM-DD"
+    );
+
     // Fetch reserved rooms
-    const rooms = await Booking.reservedRoomsInDate(selected_date as string);
+    const rooms = await Booking.reservedRoomsInDate(selectedDate);
 
     // Response
     res.status(200).json({
