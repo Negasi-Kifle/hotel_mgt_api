@@ -140,3 +140,9 @@ export const validateUpdateAPI = Joi.object({
         "Please provide a list of rooms and their associated tasks",
     }),
 }).or("house_keeper", "supervisor");
+
+// Validate the API that removes supervisor from a rooms_task array
+export const validateRemoveSupervisor = Joi.object({
+  hk_id: Joi.string().required(),
+  hk_task_id: Joi.string().required(),
+});

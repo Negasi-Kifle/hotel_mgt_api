@@ -7,7 +7,6 @@ export default class HouseKeepingDAL {
   // Create house keeping
   static async createHK(data: HKRequests.ICreateInput): Promise<IHKDoc> {
     try {
-      console.log(data);
       const houseKeeping = await HouseKeeping.create(data);
       return houseKeeping;
     } catch (error) {
@@ -257,6 +256,20 @@ export default class HouseKeepingDAL {
 
         return task;
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update supervisor
+  static async removeSupervisorFromRoomTask(
+    hk: IHKDoc,
+    rooms_task: any
+  ): Promise<IHKDoc | null> {
+    try {
+      hk.rooms_task = rooms_task;
+      await hk.save();
+      return hk;
     } catch (error) {
       throw error;
     }

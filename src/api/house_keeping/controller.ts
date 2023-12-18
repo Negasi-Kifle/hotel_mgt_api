@@ -406,3 +406,36 @@ export const getTasksByType: RequestHandler = async (req, res, nex) => {
     nex(error);
   }
 };
+
+// Update supevisor of a rooms_task
+export const removeSupervisor: RequestHandler = async (req, res, next) => {
+  try {
+    const data = <HKRequests.IRemoveSupervisor>req.value;
+    const hk = await HK.getByTaskId(data.hk_id);
+    if (!hk) return next(new AppError("HK does not exist", 404));
+
+    // Rooms tasks of the housekeeping
+    let roomsTasks = hk.rooms_task;
+    // const selectedRoomTask = roomsTasks.filter((roomTask) => {
+    //   return roomTask.id === data.hk_task_id;
+    // });
+    roomsTasks = roomsTasks.map((roomTask) => {
+      if (roomTask.supervisor) {
+        roomTask.supervisor = undefined;
+      }
+      return roomTask;
+    });
+
+    // Save the rooms_task with the supervisor field removed
+    const housekeeping = await HK.removeSupervisorFromRoomTask(hk, roomsTasks);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Supervisor removed from room task",
+      data: housekeeping,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

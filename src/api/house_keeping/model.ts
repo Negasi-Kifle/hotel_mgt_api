@@ -68,6 +68,15 @@ const hkSchema = new Schema(
   }
 );
 
+// Pre find hook
+hkSchema.pre(/^find/, function (this: IHKDoc, next) {
+  this.populate({
+    path: "rooms_task.supervisor",
+    select: "first_name last_name phone_number email",
+  });
+  next();
+});
+
 // House keeping model
 const HouseKeeping = mongoose.model<IHKDoc>("HouseKeeping", hkSchema);
 
