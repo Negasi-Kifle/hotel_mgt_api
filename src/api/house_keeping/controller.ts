@@ -139,6 +139,28 @@ export const getByTaskDate: RequestHandler = async (req, res, next) => {
   }
 };
 
+// Get all housekeepings in specific date (by task date)
+export const countLinens: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.query.task_date)
+      return next(new AppError("Please select task date", 400));
+
+    const task_date = new Date(
+      moment(new Date(req.query.task_date as string)).format("YYYY-MM-DD")
+    );
+    const houseKeepings = await HK.countLinens(task_date);
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      results: houseKeepings.length,
+      data: { houseKeepings },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Get housekeeping tasks with no supervisor in specific date
 export const HKsWithoutSupervisor: RequestHandler = async (req, res, next) => {
   try {

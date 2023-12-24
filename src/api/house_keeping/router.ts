@@ -30,6 +30,7 @@ import {
   updateIsCleaned,
   createSupervisingTask,
   removeSupervisor,
+  countLinens,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -69,6 +70,8 @@ router.get(
   roleAuth("Super-Admin", "Admin", "Receptionist"),
   getByTaskDate
 );
+
+router.get("/linens", protect, roleAuth("Super-Admin"), countLinens);
 
 router.patch(
   "/removesupervisor",

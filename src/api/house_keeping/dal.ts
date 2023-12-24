@@ -65,6 +65,37 @@ export default class HouseKeepingDAL {
     }
   }
 
+  // Count linens used in specific task date
+  static async countLinens(task_date: Date): Promise<IHKDoc[]> {
+    try {
+      const hks = HouseKeeping.aggregate([
+        {
+          $match: {
+            task_date,
+          },
+        },
+        { $unwind: "$rooms_task" },
+        { $unwind: "$rooms_task.linens_used" },
+        {
+          $group: {
+            _id: "$rooms_task.linens_used.linen_type",
+            totalAmount: { $sum: "$rooms_task.linens_used.amount" },
+          },
+        },
+        {
+          $project: {
+            linen_type: "$_id",
+            totalAmount: 1,
+            _id: 0,
+          },
+        },
+      ]);
+      return hks;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   // Get housekeepings by task date
   static async getHKsWithoutSupervisor(task_date: string): Promise<IHKDoc[]> {
     try {
