@@ -47,7 +47,7 @@ declare global {
       linens_used: ILinensUsed[];
     }
     interface IUpdateIsApprovedInput {
-      room: string;
+      room_task_id: string;
       is_approved: true | false;
     }
     interface IUpdateInput {

@@ -204,11 +204,13 @@ export const getByHouseKeeper: RequestHandler = async (req, res, next) => {
 // Get task by supevisor and date
 export const getBySupervisor: RequestHandler = async (req, res, next) => {
   try {
-    const { selected_date } = req.query;
-    const supervisings = await HK.getBySupervisor(
-      req.params.id,
-      selected_date as string
-    );
+    const { selected_date } = req.query; // Get date from request query
+    const task_date = moment(new Date(selected_date as string)).format(
+      "YYYY-MM-DD"
+    ); // Format date
+
+    // Get supervisings
+    const supervisings = await HK.getHKBySupervisor(req.params.id, task_date);
 
     // Response
     res.status(200).json({
@@ -320,27 +322,27 @@ export const updateIsApproved: RequestHandler = async (req, res, next) => {
       return next(new AppError("Housekeeping document does not exist", 404));
     }
 
+    // rooms_tasks in the hk
+    const roomsTask = hk.rooms_task;
+
+    // Find the room task to be updated
+    const roomTask = roomsTask.find((room_task) => {
+      return room_task.id === data.room_task_id;
+    });
+    if (!roomTask) return next(new AppError("Room task does not exist", 404));
+
     // Check the logged in user is the assigned supervisor
-    if (loggedInUser.id !== hk.supervisor.toString()) {
+    if (loggedInUser.id !== roomTask.supervisor?.toString()) {
       return next(
         new AppError("You are not assigned to supervise this task", 400)
       );
     }
 
-    // Find the selected room
-    const hkRooms = hk.rooms_task;
-
-    const roomToBeUpdated = hkRooms.find((room) => {
-      return room.room.toString() === data.room;
-    });
-    if (!roomToBeUpdated) {
-      return next(new AppError("Room does not exist in the task", 404));
-    }
-
-    roomToBeUpdated.is_approved = data.is_approved; // Update is_cleaned
+    // Update the "is_approved" field
+    roomTask.is_approved = data.is_approved;
 
     // Update the housekeeping document
-    const housekeeping = await HK.updateIsApproved(req.params.id, hkRooms);
+    const housekeeping = await HK.updateIsApproved(req.params.id, roomsTask);
 
     // Response
     res.status(200).json({
