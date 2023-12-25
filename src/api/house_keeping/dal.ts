@@ -85,6 +85,7 @@ export default class HouseKeepingDAL {
         {
           $project: {
             linen_type: "$_id",
+            linen_name: "$_id.linen_type",
             totalAmount: 1,
             _id: 0,
           },
