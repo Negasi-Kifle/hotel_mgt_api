@@ -92,4 +92,23 @@ export default class MinibarDAL {
       throw error;
     }
   }
+
+  // Delete all minibars
+  static async deleteAll(): Promise<void> {
+    try {
+      await Minibar.deleteMany();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Delete by id
+  static async deleteById(id: string): Promise<any> {
+    try {
+      const deletedMinibar = await Minibar.findByIdAndDelete(id);
+      return deletedMinibar;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

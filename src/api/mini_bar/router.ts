@@ -6,6 +6,8 @@ import validator from "../../utils/validator";
 import { validateCreateAPI, validateUpdateAPI } from "./validator";
 import {
   createMinibar,
+  deleteAll,
+  deleteById,
   getAllMinibars,
   getByEmp,
   getById,
@@ -22,7 +24,8 @@ router
     validator(validateCreateAPI),
     createMinibar
   )
-  .get(protect, roleAuth("Super-Admin"), getAllMinibars);
+  .get(protect, roleAuth("Super-Admin"), getAllMinibars)
+  .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.get(
   "/taskdate",
@@ -39,7 +42,8 @@ router
     roleAuth("Super-Admin", "Admin"),
     validator(validateUpdateAPI),
     updateMinibar
-  );
+  )
+  .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 router
   .route("/employee/:empId")

@@ -144,3 +144,35 @@ export const updateMinibar: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Delete all minibars
+export const deleteAll: RequestHandler = async (req, res, next) => {
+  try {
+    await MinibarDAL.deleteAll();
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "All minibars in DB deleted permanently",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Delete minibar by id
+export const deleteById: RequestHandler = async (req, res, next) => {
+  try {
+    const deletedMinibar = await MinibarDAL.deleteById(req.params.id);
+    if (!deletedMinibar)
+      return next(new AppError("Minibar does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Minibar deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
