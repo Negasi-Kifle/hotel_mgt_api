@@ -16,4 +16,49 @@ export default class MinibarDAL {
       throw error;
     }
   }
+
+  // Get all mini bar tasks
+  static async getAllMinibars(): Promise<IMiniBarDoc[]> {
+    try {
+      const minibars = await Minibar.find()
+        .populate({
+          path: "employee",
+          select: "first_name last_name phone_number",
+        })
+        .populate({ path: "rooms_minibar.room", select: "room_id room_floor" });
+      return minibars;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get minibar by id
+  static async getBYId(id: string): Promise<IMiniBarDoc | null> {
+    try {
+      const minibar = await Minibar.findById(id)
+        .populate({
+          path: "employee",
+          select: "first_name last_name phone_number",
+        })
+        .populate({ path: "rooms_minibar.room", select: "room_id room_floor" });
+      return minibar;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get by employee
+  static async getByEmp(employee: string): Promise<IMiniBarDoc[]> {
+    try {
+      const minibars = await Minibar.find({ employee })
+        .populate({
+          path: "employee",
+          select: "first_name last_name phone_number",
+        })
+        .populate({ path: "rooms_minibar.room", select: "room_id room_floor" });
+      return minibars;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
