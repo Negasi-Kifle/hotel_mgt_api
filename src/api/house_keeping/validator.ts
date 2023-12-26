@@ -106,7 +106,7 @@ export const validateIsCleaned = Joi.object({
 
 // Validate the is_approved api
 export const validateIsApproved = Joi.object({
-  room: Joi.string().required().messages({
+  room_task_id: Joi.string().required().messages({
     "any.required": "Please select room",
   }),
   is_approved: Joi.boolean().required().messages({
@@ -140,3 +140,9 @@ export const validateUpdateAPI = Joi.object({
         "Please provide a list of rooms and their associated tasks",
     }),
 }).or("house_keeper", "supervisor");
+
+// Validate the API that removes supervisor from a rooms_task array
+export const validateRemoveSupervisor = Joi.object({
+  hk_id: Joi.string().required(),
+  hk_task_id: Joi.string().required(),
+});

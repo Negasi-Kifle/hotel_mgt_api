@@ -1,13 +1,13 @@
 import moment from "moment";
 import IHKDoc, { IRoomsTask } from "./dto";
 import HouseKeeping from "./model";
+import mongoose, { Schema } from "mongoose";
 
 // Data access layer for house keeping model
 export default class HouseKeepingDAL {
   // Create house keeping
   static async createHK(data: HKRequests.ICreateInput): Promise<IHKDoc> {
     try {
-      console.log(data);
       const houseKeeping = await HouseKeeping.create(data);
       return houseKeeping;
     } catch (error) {
@@ -60,6 +60,38 @@ export default class HouseKeepingDAL {
         .populate({ path: "rooms_task.room", select: "room_id" })
         .sort("-task_date");
       return houseKeepings;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Count linens used in specific task date
+  static async countLinens(task_date: Date): Promise<IHKDoc[]> {
+    try {
+      const hks = HouseKeeping.aggregate([
+        {
+          $match: {
+            task_date,
+          },
+        },
+        { $unwind: "$rooms_task" },
+        { $unwind: "$rooms_task.linens_used" },
+        {
+          $group: {
+            _id: "$rooms_task.linens_used.linen_type",
+            totalAmount: { $sum: "$rooms_task.linens_used.amount" },
+          },
+        },
+        {
+          $project: {
+            linen_type: "$_id",
+            linen_name: "$_id.linen_type",
+            totalAmount: 1,
+            _id: 0,
+          },
+        },
+      ]);
+      return hks;
     } catch (error) {
       throw error;
     }
@@ -119,14 +151,12 @@ export default class HouseKeepingDAL {
           $and: [{ house_keeper }, { task_date: { $eq: selctedDate } }],
         })
           .populate({ path: "house_keeper", select: "first_name last_name" })
-          .populate({ path: "supervisor", select: "first_name last_name" })
           .populate({ path: "rooms_task.room", select: "room_id" })
           .sort("-task_date");
         return tasks;
       } else {
         const tasks = await HouseKeeping.find({ house_keeper })
           .populate({ path: "house_keeper", select: "first_name last_name" })
-          .populate({ path: "supervisor", select: "first_name last_name" })
           .populate({ path: "rooms_task.room", select: "room_id" })
           .sort("-task_date");
         return tasks;
@@ -168,6 +198,38 @@ export default class HouseKeepingDAL {
           .sort("-task_date");
         return tasks;
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Get housekeeping by supervisor
+  static async getHKBySupervisor(
+    supervisor: string,
+    task_date: string
+  ): Promise<IHKDoc[]> {
+    try {
+      const hks = HouseKeeping.aggregate([
+        // Unwind the rooms_task array to deconstruct it
+        { $unwind: "$rooms_task" },
+        // Match documents where the supervisor field matches the specific ID
+        {
+          $match: {
+            task_date: new Date(task_date),
+            "rooms_task.supervisor": new mongoose.Types.ObjectId(supervisor),
+          },
+        },
+        // Group by housekeeper and reconstruct the documents
+        {
+          $group: {
+            _id: "$_id",
+            house_keeper: { $first: "$house_keeper" },
+            task_date: { $first: "$task_date" },
+            rooms_task: { $push: "$rooms_task" },
+          },
+        },
+      ]);
+      return hks;
     } catch (error) {
       throw error;
     }
@@ -257,6 +319,20 @@ export default class HouseKeepingDAL {
 
         return task;
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // Update supervisor
+  static async removeSupervisorFromRoomTask(
+    hk: IHKDoc,
+    rooms_task: any
+  ): Promise<IHKDoc | null> {
+    try {
+      hk.rooms_task = rooms_task;
+      await hk.save();
+      return hk;
     } catch (error) {
       throw error;
     }

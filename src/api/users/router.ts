@@ -75,7 +75,11 @@ router.patch(
 
 router
   .route("/:userId")
-  .get(protect, roleAuth("Super-Admin"), getUserById)
+  .get(
+    protect,
+    roleAuth("Super-Admin", "Supervisor", "HouseKeeper"),
+    getUserById
+  )
   .delete(protect, roleAuth("Super-Admin"), deleteById);
 
 // Export

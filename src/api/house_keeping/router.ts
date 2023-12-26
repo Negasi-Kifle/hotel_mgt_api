@@ -11,6 +11,7 @@ import {
   validateUpdateAPI,
   validateSupervisorTaskAPI,
   validateSupervisorTaskAPI2,
+  validateRemoveSupervisor,
 } from "./validator";
 import {
   createHousekeeperTask,
@@ -28,6 +29,8 @@ import {
   updateIsApproved,
   updateIsCleaned,
   createSupervisingTask,
+  removeSupervisor,
+  countLinens,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -39,7 +42,11 @@ router
     validator(validateHousekeeperTaskAPI),
     createHousekeeperTask
   )
-  .get(protect, roleAuth("Super-Admin", "Housekeeper"), getAllHKsInDB)
+  .get(
+    protect,
+    roleAuth("Super-Admin", "Housekeeper", "Supervisor"),
+    getAllHKsInDB
+  )
   .delete(protect, roleAuth("Super-Admin"), deleteAll);
 
 router.post(
@@ -62,6 +69,15 @@ router.get(
   protect,
   roleAuth("Super-Admin", "Admin", "Receptionist"),
   getByTaskDate
+);
+
+router.get("/linens", protect, roleAuth("Super-Admin"), countLinens);
+
+router.patch(
+  "/removesupervisor",
+  protect,
+  validator(validateRemoveSupervisor),
+  removeSupervisor
 );
 
 router.get("/hkswithoutsupervisor", protect, HKsWithoutSupervisor);

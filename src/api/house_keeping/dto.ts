@@ -17,7 +17,7 @@ export interface IRoomsTask extends Document {
   linens_used: ILinensUsed[];
   is_cleaned: true | false;
   is_approved: true | false;
-  supervisor: string;
+  supervisor?: string;
 }
 
 // Interface for linens used
@@ -47,7 +47,7 @@ declare global {
       linens_used: ILinensUsed[];
     }
     interface IUpdateIsApprovedInput {
-      room: string;
+      room_task_id: string;
       is_approved: true | false;
     }
     interface IUpdateInput {
@@ -58,6 +58,10 @@ declare global {
     interface ICreateSupervisingTask {
       hks_and_room_tasks: IHKAndRoomTask[];
       supervisor: string;
+    }
+    interface IRemoveSupervisor {
+      hk_id: string;
+      hk_task_id: string;
     }
   }
 }
