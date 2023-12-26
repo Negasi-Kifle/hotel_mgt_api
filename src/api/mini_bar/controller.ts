@@ -116,3 +116,31 @@ export const getByTaskDate: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+// Update minibar
+export const updateMinibar: RequestHandler = async (req, res, next) => {
+  try {
+    // Incoming data
+    const data = <MiniBarRequests.IUpdateInput>req.value;
+
+    // Format the task date
+    if (data.task_date) {
+      const taskDate = new Date(data.task_date);
+      const formattedTaskDate = moment(taskDate).format("YYYY-MM-DD");
+      data.task_date = new Date(formattedTaskDate);
+    }
+
+    // Update minibar
+    const minibar = await MinibarDAL.updateMinibar(req.params.id, data);
+    if (!minibar) return next(new AppError("Minibar does not exist", 404));
+
+    // Response
+    res.status(200).json({
+      status: "SUCCESS",
+      message: "Minibar updated successfully",
+      data: { minibar },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -71,4 +71,25 @@ export default class MinibarDAL {
       throw error;
     }
   }
+
+  // Update minibar
+  static async updateMinibar(
+    id: string,
+    data: MiniBarRequests.IUpdateInput
+  ): Promise<IMiniBarDoc | null> {
+    try {
+      const minibar = await Minibar.findByIdAndUpdate(id, data, {
+        runValidators: true,
+        new: true,
+      })
+        .populate({
+          path: "employee",
+          select: "first_name last_name phone_number",
+        })
+        .populate({ path: "rooms_minibar.room", select: "room_id room_floor" });
+      return minibar;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

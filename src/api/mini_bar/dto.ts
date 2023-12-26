@@ -23,5 +23,10 @@ declare global {
       rooms_minibar: IRoomsMiniBar[];
       task_date: Date;
     }
+    interface IUpdateInput {
+      employee: string;
+      rooms_minibar: IRoomsMiniBar[];
+      task_date: Date;
+    }
   }
 }

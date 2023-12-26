@@ -3,13 +3,14 @@ const router = Router();
 import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
-import { validateCreateAPI } from "./validator";
+import { validateCreateAPI, validateUpdateAPI } from "./validator";
 import {
   createMinibar,
   getAllMinibars,
   getByEmp,
   getById,
   getByTaskDate,
+  updateMinibar,
 } from "./controller";
 
 // Mount routes with their respective controller methods
@@ -30,7 +31,15 @@ router.get(
   getByTaskDate
 );
 
-router.route("/:id").get(protect, roleAuth("Super-Admin", "Admin"), getById);
+router
+  .route("/:id")
+  .get(protect, roleAuth("Super-Admin", "Admin"), getById)
+  .patch(
+    protect,
+    roleAuth("Super-Admin", "Admin"),
+    validator(validateUpdateAPI),
+    updateMinibar
+  );
 
 router
   .route("/employee/:empId")
