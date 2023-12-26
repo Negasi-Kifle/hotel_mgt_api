@@ -26,6 +26,10 @@ const minibarSchema = new Schema(
         },
       },
     ],
+    task_date: {
+      type: Date,
+      required: [true, "Please select date"],
+    },
   },
   {
     writeConcern: { w: "majority", j: true },

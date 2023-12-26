@@ -21,4 +21,9 @@ export const validateCreateAPI = Joi.object({
       "any.required": "Please select at least one room for the minibar task",
       "array.min": "Please select at least one room for the minibar task",
     }),
+  task_date: Joi.date().min("now").required().messages({
+    "any.required": "Please select task date",
+    "date.empty": "Please select task date",
+    "date.min": "Task date can not be in the past",
+  }),
 });

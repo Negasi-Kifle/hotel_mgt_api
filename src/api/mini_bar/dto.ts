@@ -4,6 +4,7 @@ import { Document } from "mongoose";
 export default interface IMiniBarDoc extends Document {
   employee: string;
   rooms_minibar: IRoomsMiniBar[];
+  task_date: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +21,7 @@ declare global {
     interface ICreateInput {
       employee: string;
       rooms_minibar: IRoomsMiniBar[];
+      task_date: Date;
     }
   }
 }

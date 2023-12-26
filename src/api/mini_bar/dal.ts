@@ -61,4 +61,14 @@ export default class MinibarDAL {
       throw error;
     }
   }
+
+  // Get minibar by task date
+  static async getByTaskDate(task_date: string): Promise<IMiniBarDoc[]> {
+    try {
+      const minibars = await Minibar.find({ task_date: new Date(task_date) });
+      return minibars;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

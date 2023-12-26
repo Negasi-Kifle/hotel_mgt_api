@@ -4,7 +4,13 @@ import protect from "../../authorization/protect";
 import roleAuth from "../../authorization/roleAuth";
 import validator from "../../utils/validator";
 import { validateCreateAPI } from "./validator";
-import { createMinibar, getAllMinibars, getByEmp, getById } from "./controller";
+import {
+  createMinibar,
+  getAllMinibars,
+  getByEmp,
+  getById,
+  getByTaskDate,
+} from "./controller";
 
 // Mount routes with their respective controller methods
 router
@@ -16,6 +22,13 @@ router
     createMinibar
   )
   .get(protect, roleAuth("Super-Admin"), getAllMinibars);
+
+router.get(
+  "/taskdate",
+  protect,
+  roleAuth("Super-Admin", "Admin"),
+  getByTaskDate
+);
 
 router.route("/:id").get(protect, roleAuth("Super-Admin", "Admin"), getById);
 
