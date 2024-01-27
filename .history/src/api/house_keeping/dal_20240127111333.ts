@@ -231,18 +231,7 @@ export default class HouseKeepingDAL {
           },
         },
         {
-          $lookup: {
-            from: "rooms", // Assuming the name of the Rooms model is "rooms"
-            localField: "rooms_task.room",
-            foreignField: "_id",
-            as: "rooms_task.room",
-          },
-        },
-        {
           $unwind: "$rooms_task.supervisor",
-        },
-        {
-          $unwind: "$rooms_task.room",
         },
         {
           $group: {

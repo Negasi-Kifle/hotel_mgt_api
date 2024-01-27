@@ -224,7 +224,7 @@ export default class HouseKeepingDAL {
         },
         {
           $lookup: {
-            from: "users", // Assuming the name of the Supervisor model is "supervisors"
+            from: "supervisors", // Assuming the name of the Supervisor model is "supervisors"
             localField: "rooms_task.supervisor",
             foreignField: "_id",
             as: "rooms_task.supervisor",

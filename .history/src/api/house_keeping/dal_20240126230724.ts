@@ -214,36 +214,17 @@ export default class HouseKeepingDAL {
     task_date: string
   ): Promise<IHKDoc[]> {
     try {
-      const hks = await HouseKeeping.aggregate([
+      const hks = HouseKeeping.aggregate([
+        // Unwind the rooms_task array to deconstruct it
         { $unwind: "$rooms_task" },
+        // Match documents where the supervisor field matches the specific ID
         {
           $match: {
             task_date: new Date(task_date),
             "rooms_task.supervisor": new mongoose.Types.ObjectId(supervisor),
           },
         },
-        {
-          $lookup: {
-            from: "users", // Assuming the name of the Supervisor model is "supervisors"
-            localField: "rooms_task.supervisor",
-            foreignField: "_id",
-            as: "rooms_task.supervisor",
-          },
-        },
-        {
-          $lookup: {
-            from: "rooms", // Assuming the name of the Rooms model is "rooms"
-            localField: "rooms_task.room",
-            foreignField: "_id",
-            as: "rooms_task.room",
-          },
-        },
-        {
-          $unwind: "$rooms_task.supervisor",
-        },
-        {
-          $unwind: "$rooms_task.room",
-        },
+        // Group by housekeeper and reconstruct the documents
         {
           $group: {
             _id: "$_id",
@@ -253,7 +234,6 @@ export default class HouseKeepingDAL {
           },
         },
       ]);
-
       return hks;
     } catch (error) {
       throw error;

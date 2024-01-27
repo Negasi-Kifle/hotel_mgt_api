@@ -39,7 +39,7 @@ router.get("/reservedrooms", protect, getRoomsResvInDate);
 router.patch(
   "/:bookingId/status",
   protect,
-  roleAuth("Super-Admin", "Receptionist"),
+  roleAuth("Super-Admin"),
   validator(validateStatusAPI),
   updateStatus
 );

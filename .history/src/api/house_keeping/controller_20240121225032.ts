@@ -298,7 +298,10 @@ export const updateIsCleaned: RequestHandler = async (req, res, next) => {
     const hkRooms = hk.rooms_task;
 
     const roomToBeUpdated = hkRooms.find((room) => {
-      return room.room.toString() === data.room;
+      console.log(room);
+      console.log(data.room);
+
+      return room._id.toString() === data.room;
     });
 
     if (!roomToBeUpdated) {
